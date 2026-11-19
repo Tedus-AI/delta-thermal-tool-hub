@@ -1,0 +1,10 @@
+const records = [
+ ['5G RRU 體積快速評估','RRU 體積','5G RRU Quick Volume Evaluation Tool','體積評估','VOLUME ESTIMATION','依散熱需求初估 5G RRU 的機構體積，作為鰭片散熱器與外殼尺寸設計的起點。','5G-RRU-Quick-Volume-Evaluation-Tool'],
+ ['導熱墊片與凸台尺寸評估','墊片與凸台','AI Thermal Pad and Stud Size Evaluation Tool','尺寸評估','PAD & STUD SIZING','估算導熱墊片與凸台的配合尺寸，檢視設計間隙與壓縮需求。','AI-Thermal-pad-and-stud-size-Evaluation-Tool'],
+ ['熱測試報告產生器','熱測試報告','Thermal Test Report Builder','測試報告','TEST REPORTING','整理熱測試的量測結果與圖片，建立可供設計審查的測試報告。','Thermal-Test-Report-Builder'],
+ ['專案 TIM 材料管理','TIM 管理','Project TIM Management Tool','材料管理','MATERIAL MANAGEMENT','依專案整理熱介面材料的選用資料，方便比對與追蹤。','Project-TIM-management-tool'],
+ ['RRU 熱阻網路視覺化','熱阻網路','RRU Thermal Network Visualizer','熱路分析','THERMAL NETWORK','開啟 FR1 RRU 專案的熱傳路徑，檢視熱源、節點與元件之間的熱阻關係。','RRU-Thermal-Network-Visualizer','project/FR1_RRU_starkcore/thermal-path'],
+ ['PA 焊接銅箔自動繪圖','PA 銅箔繪圖','PA Solder Copper Auto Draw','圖面生成','COPPER LAYOUT','依 PA 焊接區的幾何參數建立銅箔圖形，協助確認佈局。','pa-solder-copper-auto-draw'],
+ ['TIM 點膠模擬器','TIM 點膠','TIM Dispensing Simulator','製程模擬','DISPENSE SIMULATION','模擬導熱介面材料的點膠配置，觀察膠材分布並比較設計方案。','TIM-Dispensing-Simulator']
+];
+const defaults=records.map(([name,short,en,category,tag,summary,slug,path=''],i)=>({id:slug,name,short,en,category,tag,summary,image:'assets/'+(i+1)+'.webp',launchUrl:'https://tedus-ai.github.io/'+slug+'/'+path,repoUrl:'https://github.com/Tedus-AI/'+slug}));
