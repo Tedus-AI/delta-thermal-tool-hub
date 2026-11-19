@@ -493,8 +493,10 @@ header {
 }
 .car img,
 .empty-window {
-  width: 86%;
-  height: 52%;
+  width: 69%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  flex: none;
   object-fit: contain;
   pointer-events: none;
   border-radius: 20% 20% 14% 14%;
