@@ -247,14 +247,86 @@ document.addEventListener("keydown", (e) => {
     choose(target + (e.key === "ArrowRight" ? 1 : -1));
   }
 });
-$("theme").value = mode;
-$("theme").onchange = (e) => {
-  mode = e.target.value;
-  try {
-    localStorage.setItem("backgroundMode", mode);
-  } catch {}
+const picker = $("theme");
+const track = picker.querySelector(".scene-track");
+const drop = picker.querySelector(".scene-drop");
+const choices = [...picker.querySelectorAll("input")];
+
+let drag = null;
+let suppressPickerClick = false;
+
+function placeDrop(index) {
+  track.style.setProperty("--position", index);
+}
+function selectScene(choice, persist) {
+  choice.checked = true;
+  mode = choice.value;
+  placeDrop(choices.indexOf(choice));
+  if (persist) {
+    try {
+      localStorage.setItem("backgroundMode", mode);
+    } catch {}
+    if (!reduce.matches && drop.animate) {
+      drop.firstElementChild.animate(
+        [
+          { transform: "scale(1.12,.86)" },
+          { transform: "scale(.96,1.07)", offset: 0.48 },
+          { transform: "scale(1)" },
+        ],
+        { duration: 320, easing: "ease-out" },
+      );
+    }
+  }
   scene();
-};
+}
+selectScene(
+  choices.find((choice) => choice.value === mode) || choices[0],
+  false,
+);
+picker.addEventListener("change", (e) => selectScene(e.target, true));
+track.addEventListener("pointerdown", (e) => {
+  if (!e.isPrimary || e.button !== 0) return;
+  suppressPickerClick = false;
+  drag = { id: e.pointerId, start: e.clientX, moved: false };
+});
+function dropIndex(x) {
+  const bounds = track.getBoundingClientRect();
+  return Math.max(0, Math.min(3, ((x - bounds.left) * 4) / bounds.width - 0.5));
+}
+track.addEventListener("pointermove", (e) => {
+  if (drag?.id !== e.pointerId) return;
+  if (!drag.moved && Math.abs(e.clientX - drag.start) < 4) return;
+  if (!drag.moved) {
+    track.setPointerCapture(e.pointerId);
+    drag.moved = true;
+    track.classList.add("dragging");
+  }
+  placeDrop(dropIndex(e.clientX));
+});
+function finishDrag(e, commit) {
+  if (drag?.id !== e.pointerId) return;
+  const moved = drag.moved;
+  drag = null;
+  track.classList.remove("dragging");
+  if (moved && commit) {
+    suppressPickerClick = true;
+    const choice = choices[Math.round(dropIndex(e.clientX))];
+    selectScene(choice, true);
+    choice.focus({ preventScroll: true });
+  } else placeDrop(choices.findIndex((choice) => choice.checked));
+}
+window.addEventListener("pointerup", (e) => finishDrag(e, true));
+window.addEventListener("pointercancel", (e) => finishDrag(e, false));
+track.addEventListener(
+  "click",
+  (e) => {
+    if (suppressPickerClick && e.detail) {
+      e.preventDefault();
+      suppressPickerClick = false;
+    }
+  },
+  true,
+);
 setInterval(scene, 1000);
 document.addEventListener("visibilitychange", scene);
 let returnTo;

@@ -105,7 +105,6 @@ header {
   border-bottom: 1px solid var(--edge);
 }
 .brand,
-.theme,
 .nav,
 .actions {
   display: flex;
@@ -127,12 +126,121 @@ header {
   border-left: 1px solid var(--edge);
   padding-left: 15px;
 }
-.theme {
-  gap: 8px;
-  font-size: 0.9rem;
+.scene-picker {
+  padding: 3px;
+  border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  border-radius: 999px;
+  background: linear-gradient(165deg, #8caebe33, #688aa522);
+  box-shadow:
+    inset 0 1px 3px #102c4529,
+    0 1px 0 #fff4;
+  backdrop-filter: blur(12px);
+  user-select: none;
+  touch-action: pan-y;
 }
-.theme select {
-  padding: 4px 6px;
+.scene-track {
+  --position: 0;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  isolation: isolate;
+}
+.scene-track label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0 9px;
+  min-height: 32px;
+  min-width: 62px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 560;
+  color: var(--muted);
+  border-radius: 999px;
+}
+.scene-track input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+}
+.scene-track label:has(:checked) {
+  color: var(--ink);
+  font-weight: 720;
+}
+.scene-track label:has(:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.scene-track svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.scene-drop {
+  pointer-events: none;
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 25%;
+  z-index: -1;
+  transform: translateX(calc(var(--position) * 100%));
+  transition: transform 0.38s cubic-bezier(0.22, 1.26, 0.36, 1);
+}
+.scene-drop i {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 1px solid #ffffffaa;
+  background:
+    radial-gradient(ellipse at 30% 0%, #ffffffe0, transparent 47%),
+    linear-gradient(160deg, #efffff75, #99cadb45 50%, #d7f7ff80);
+  box-shadow:
+    inset 0 -2px 3px #4288a74a,
+    inset 0 1px 2px white,
+    0 2px 5px #12344940;
+  transition: transform 0.16s;
+}
+[data-scene="night"] .scene-drop i {
+  background:
+    radial-gradient(ellipse at 26% 0%, #d6ffff96, transparent 51%),
+    linear-gradient(145deg, #93c9d85e, #47708066 66%, #78abb888);
+}
+.scene-track.dragging {
+  cursor: grabbing;
+}
+.dragging .scene-drop {
+  transition: none;
+}
+.dragging .scene-drop i {
+  transform: scale(1.11, 0.88);
+}
+@media (max-width: 600px) {
+  .scene-track label {
+    min-width: 33px;
+    min-height: 34px;
+    padding: 0 5px;
+  }
+  .scene-track svg {
+    width: 18px;
+    height: 18px;
+  }
+  .scene-track label span {
+    display: none;
+  }
+}
+@media (max-width: 370px) {
+  header .brand > span + span {
+    max-width: 74px;
+    line-height: 1.06;
+  }
 }
 .layout {
   display: grid;
@@ -509,9 +617,6 @@ button:disabled {
   }
   .brand > span + span {
     padding-left: 8px;
-  }
-  .theme > span {
-    display: none;
   }
   figure {
     height: clamp(200px, 67vw, 430px);
