@@ -1,1 +1,145 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102b45"><title>熱流工具控制台 · DELTA Thermal Tool Hub</title><script>let mode='auto';try{mode=localStorage.getItem('backgroundMode')||'auto'}catch{}function scene(){let h=new Date().getHours();document.documentElement.dataset.scene=['day','dusk','night'].includes(mode)?mode:h<6||h>=19?'night':h>=17?'dusk':'day'}scene()</script><link rel="stylesheet" href="style.css"></head><body><div class="sky dusk"></div><div class="sky night"></div><header><div class="brand"><span class="brandlogo"><img src="assets/delta.png" alt="DELTA"></span><span>Thermal Tool Hub</span></div><label class="theme">◐ <span>背景</span> <select id="theme" aria-label="背景模式"><option value="auto">自動</option><option value="day">白天</option><option value="dusk">黃昏</option><option value="night">黑夜</option></select></label></header><main><div class="intro"><span class="eyebrow"><i></i> THERMAL ENGINEERING</span><h1>熱流工具控制台</h1></div><div class="layout"><section class="wheelPanel" aria-label="工具輪盤"><div class="sectionline"><span>工具輪盤</span><span class="mono" id="total"></span></div><div class="stage" id="stage"><div class="ground"></div><div class="wheel" id="wheel"><div class="leg left"></div><div class="leg right"></div><div class="base"></div><div class="rim"></div><div id="spokes"></div><div class="axle"><img src="assets/delta.png" alt="DELTA"></div><div id="cars"></div></div></div><div class="wheelFoot"><span>拖曳輪盤或使用 ← → 切換</span><span id="groups"></span></div></section><section class="detail" aria-label="工具預覽"><div class="sectionline"><span>工具預覽</span><div class="nav"><button id="prev" aria-label="上一個工具">‹</button><button id="next" aria-label="下一個工具">›</button></div></div><div id="preview" aria-live="polite"><figure><img id="hero" alt=""><figcaption id="fig"></figcaption></figure><div class="info"><div class="category" id="category"></div><h2 id="name"></h2><div id="en"></div><p id="summary"></p></div></div><div class="actions"><a id="launch" target="_blank" rel="noopener noreferrer">開啟工具 ↗</a><a id="repo" target="_blank" rel="noopener noreferrer">GitHub 原始碼</a></div></section></div></main><dialog id="dialog"><form id="form"><h2>新增工具</h2><p>新增項目會儲存在此瀏覽器。</p><label>工具名稱<input required name="name" maxlength="100"></label><label>車廂短名稱（選填）<input name="short" maxlength="16"></label><label>工具簡介<textarea required name="summary" maxlength="360"></textarea></label><label>工具入口網址<input required name="launchUrl" type="url" placeholder="https://"></label><label>Repo 網址（選填）<input name="repoUrl" type="url"></label><label>代表圖片（選填）<input name="image" type="file" accept="image/png,image/jpeg,image/webp"></label><p id="error" role="alert"></p><footer><button type="button" id="cancel">取消</button><button class="primary">儲存工具</button></footer></form></dialog><script src="catalog.js"></script><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#102b45" />
+    <title>熱流工具控制台 · DELTA Thermal Tool Hub</title>
+    <script>
+      let mode = "auto";
+      try {
+        mode = localStorage.getItem("backgroundMode") || "auto";
+      } catch {}
+      function scene() {
+        let h = new Date().getHours();
+        document.documentElement.dataset.scene = [
+          "day",
+          "dusk",
+          "night",
+        ].includes(mode)
+          ? mode
+          : h < 6 || h >= 19
+            ? "night"
+            : h >= 17
+              ? "dusk"
+              : "day";
+      }
+      scene();
+    </script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="sky dusk"></div>
+    <div class="sky night"></div>
+    <header>
+      <div class="brand">
+        <span class="brandlogo"><img src="assets/delta.png" alt="DELTA" /></span
+        ><span>Thermal Tool Hub</span>
+      </div>
+      <label class="theme"
+        >◐ <span>背景</span>
+        <select id="theme" aria-label="背景模式">
+          <option value="auto">自動</option>
+          <option value="day">白天</option>
+          <option value="dusk">黃昏</option>
+          <option value="night">黑夜</option>
+        </select></label
+      >
+    </header>
+    <main>
+      <div class="intro">
+        <span class="eyebrow"><i></i> THERMAL ENGINEERING</span>
+        <h1>熱流工具控制台</h1>
+      </div>
+      <div class="layout">
+        <section class="wheelPanel" aria-label="工具輪盤">
+          <div class="sectionline">
+            <span>工具輪盤</span><span class="mono" id="total"></span>
+          </div>
+          <div class="stage" id="stage">
+            <div class="ground"></div>
+            <div class="wheel" id="wheel">
+              <div class="leg left"></div>
+              <div class="leg right"></div>
+              <div class="base"></div>
+              <div class="rim"></div>
+              <div id="spokes"></div>
+              <div class="axle"><img src="assets/delta.png" alt="DELTA" /></div>
+              <div id="cars"></div>
+            </div>
+          </div>
+          <div class="wheelFoot">
+            <span>拖曳輪盤或使用 ← → 切換</span><span id="groups"></span>
+          </div>
+        </section>
+        <section class="detail" aria-label="工具預覽">
+          <div class="sectionline">
+            <span>工具預覽</span>
+            <div class="nav">
+              <button id="prev" aria-label="上一個工具">‹</button
+              ><button id="next" aria-label="下一個工具">›</button>
+            </div>
+          </div>
+          <div id="preview" aria-live="polite">
+            <figure>
+              <img id="hero" alt="" />
+              <figcaption id="fig"></figcaption>
+            </figure>
+            <div class="info">
+              <div class="category" id="category"></div>
+              <h2 id="name"></h2>
+              <div id="en"></div>
+              <p id="summary"></p>
+            </div>
+          </div>
+          <div class="actions">
+            <a id="launch" target="_blank" rel="noopener noreferrer"
+              >開啟工具 ↗</a
+            ><a id="repo" target="_blank" rel="noopener noreferrer"
+              >GitHub 原始碼</a
+            ><a id="share" target="_blank" rel="noopener noreferrer" hidden
+              >發佈至團隊</a
+            >
+          </div>
+        </section>
+      </div>
+    </main>
+    <dialog id="dialog">
+      <form id="form">
+        <h2>新增工具</h2>
+        <p>
+          儲存後即可在此瀏覽器使用。有 repo 寫入權限的成員亦可透過 GitHub
+          將工具發佈至團隊。
+        </p>
+        <label>工具名稱<input required name="name" maxlength="100" /></label
+        ><label>車廂短名稱（選填）<input name="short" maxlength="16" /></label
+        ><label
+          >工具簡介<textarea
+            required
+            name="summary"
+            maxlength="360"
+          ></textarea></label
+        ><label
+          >工具入口網址<input
+            required
+            name="launchUrl"
+            type="url"
+            placeholder="https://" /></label
+        ><label>Repo 網址（選填）<input name="repoUrl" type="url" /></label
+        ><label
+          >代表圖片（選填）<input
+            name="image"
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+        /></label>
+        <p id="error" role="alert"></p>
+        <footer>
+          <button type="button" id="cancel">取消</button
+          ><button class="primary">儲存工具</button>
+        </footer>
+      </form>
+    </dialog>
+    <script src="catalog.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
