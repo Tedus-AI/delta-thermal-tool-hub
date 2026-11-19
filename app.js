@@ -349,10 +349,29 @@ function readImage(file) {
   return new Promise((resolve, reject) => {
     const r = new FileReader();
     r.onload = () => resolve(r.result);
-    r.onerror = () => reject(Error("The image could not be read."));
+    r.onerror = () => reject(Error("無法讀取圖片，請重新選擇。"));
     r.readAsDataURL(file);
   });
 }
+const toolForm = $("form");
+toolForm.addEventListener(
+  "invalid",
+  (e) => {
+    const field = e.target;
+    if (field.validity.valueMissing)
+      field.setCustomValidity("請填寫這個欄位。");
+    else if (field.validity.typeMismatch)
+      field.setCustomValidity("請輸入完整網址，例如 https://example.com。");
+  },
+  true,
+);
+toolForm.addEventListener("input", (e) => e.target.setCustomValidity(""));
+toolForm.elements.image.addEventListener("change", (e) => {
+  $("file-name").textContent = e.target.files[0]?.name || "尚未選擇圖片";
+});
+toolForm.addEventListener("reset", () => {
+  $("file-name").textContent = "尚未選擇圖片";
+});
 $("form").onsubmit = async (e) => {
   e.preventDefault();
   const f = e.target,
@@ -367,16 +386,16 @@ $("form").onsubmit = async (e) => {
       summary = get("summary"),
       launchUrl = get("launchUrl"),
       repoUrl = get("repoUrl");
-    if (!name || !summary) throw Error("Enter a tool name and description.");
+    if (!name || !summary) throw Error("請填寫工具名稱和簡介。");
     if (!validUrl(launchUrl) || (repoUrl && !validUrl(repoUrl)))
-      throw Error("Use an HTTP or HTTPS URL.");
+      throw Error("網址須以 http:// 或 https:// 開頭。");
     const file = data.get("image");
     if (
       file.size > 1024 * 1024 ||
       (file.size &&
         !["image/png", "image/jpeg", "image/webp"].includes(file.type))
     )
-      throw Error("Choose a PNG, JPEG or WebP image under 1 MB.");
+      throw Error("請選擇 1 MB 以內的 PNG、JPEG 或 WebP 圖片。");
     const t = {
       id: crypto.randomUUID(),
       name,
@@ -399,8 +418,10 @@ $("form").onsubmit = async (e) => {
   } catch (error) {
     $("error").textContent =
       error.name === "QuotaExceededError"
-        ? "Storage is full. Try a smaller image."
-        : error.message;
+        ? "儲存空間不足，請縮小圖片後再試。"
+        : /[\u3400-\u9fff]/.test(error.message)
+          ? error.message
+          : "儲存失敗，請確認瀏覽器允許儲存資料後再試。";
   } finally {
     b.disabled = false;
   }

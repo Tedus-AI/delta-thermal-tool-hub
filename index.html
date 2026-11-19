@@ -4,6 +4,22 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#102b45" />
+    <link
+      rel="icon"
+      href="assets/favicon.ico"
+      sizes="16x16 32x32 48x48 64x64"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="assets/hub-mark.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="assets/apple-touch-icon.png"
+    />
     <title>DELTA Thermal Tool Hub</title>
     <script>
       let mode = "auto";
@@ -100,7 +116,7 @@
               <img class="stand" src="assets/stand.svg" alt="" />
               <img class="rotor" id="rotor" src="assets/rotor.svg" alt="" />
               <div class="axle">
-                <span class="delta-mark" role="img" aria-label="Delta"></span>
+                <img class="delta-mark" src="assets/hub-mark.png" alt="Delta" />
               </div>
               <div id="cars"></div>
             </div>
@@ -140,42 +156,40 @@
         </section>
       </div>
     </main>
-    <dialog id="dialog">
+    <dialog id="dialog" lang="zh-Hant" aria-labelledby="add-title">
       <form id="form">
-        <h2>Add tool</h2>
+        <h2 id="add-title">新增工具</h2>
         <p>
-          Save tools in this browser. Repository collaborators can also publish
-          them to the team.
+          工具會儲存在這個瀏覽器。具有儲存庫寫入權限的成員也可以將工具發佈給團隊。
         </p>
-        <label>Tool name<input required name="name" maxlength="100" /></label
+        <label>工具名稱<input required name="name" maxlength="100" /></label
+        ><label>車廂英文短名（選填）<input name="short" maxlength="16" /></label
         ><label
-          >English cabin label (optional)<input
-            name="short"
-            maxlength="16" /></label
-        ><label
-          >Description<textarea
+          >工具簡介<textarea
             required
             name="summary"
             maxlength="360"
           ></textarea></label
         ><label
-          >Tool URL<input
+          >工具入口網址<input
             required
             name="launchUrl"
             type="url"
             placeholder="https://" /></label
+        ><label>原始碼網址（選填）<input name="repoUrl" type="url" /></label
         ><label
-          >Repository URL (optional)<input name="repoUrl" type="url" /></label
-        ><label
-          >Tool image (optional)<input
-            name="image"
-            type="file"
-            accept="image/png,image/jpeg,image/webp"
-        /></label>
+          >代表圖片（選填）<span class="file-picker"
+            ><span>選擇圖片</span><span id="file-name">尚未選擇圖片</span
+            ><input
+              name="image"
+              type="file"
+              aria-label="選擇代表圖片"
+              accept="image/png,image/jpeg,image/webp" /></span
+        ></label>
         <p id="error" role="alert"></p>
         <footer>
-          <button type="button" id="cancel">Cancel</button
-          ><button class="primary">Save tool</button>
+          <button type="button" id="cancel">取消</button
+          ><button class="primary">儲存工具</button>
         </footer>
       </form>
     </dialog>
