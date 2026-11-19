@@ -1,7 +1,7 @@
 const records = [
   [
     "5G RRU 體積快速評估",
-    "RRU 體積",
+    "RRU Volume",
     "5G RRU Quick Volume Evaluation Tool",
     "體積評估",
     "VOLUME ESTIMATION",
@@ -10,7 +10,7 @@ const records = [
   ],
   [
     "導熱墊片與凸台尺寸評估",
-    "墊片與凸台",
+    "Pad & Stud",
     "AI Thermal Pad and Stud Size Evaluation Tool",
     "尺寸評估",
     "PAD & STUD SIZING",
@@ -19,7 +19,7 @@ const records = [
   ],
   [
     "熱測試報告產生器",
-    "熱測試報告",
+    "Test Report",
     "Thermal Test Report Builder",
     "測試報告",
     "TEST REPORTING",
@@ -28,7 +28,7 @@ const records = [
   ],
   [
     "專案 TIM 材料管理",
-    "TIM 管理",
+    "Project TIM",
     "Project TIM Management Tool",
     "材料管理",
     "MATERIAL MANAGEMENT",
@@ -37,7 +37,7 @@ const records = [
   ],
   [
     "RRU 熱阻網路視覺化",
-    "熱阻網路",
+    "Thermal Net",
     "RRU Thermal Network Visualizer",
     "熱路分析",
     "THERMAL NETWORK",
@@ -47,7 +47,7 @@ const records = [
   ],
   [
     "PA 焊接銅箔自動繪圖",
-    "PA 銅箔繪圖",
+    "PA Copper",
     "PA Solder Copper Auto Draw",
     "圖面生成",
     "COPPER LAYOUT",
@@ -56,7 +56,7 @@ const records = [
   ],
   [
     "TIM 點膠模擬器",
-    "TIM 點膠",
+    "Dispensing",
     "TIM Dispensing Simulator",
     "製程模擬",
     "DISPENSE SIMULATION",

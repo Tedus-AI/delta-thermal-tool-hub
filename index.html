@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#102b45" />
-    <title>熱流工具控制台 · DELTA Thermal Tool Hub</title>
+    <title>DELTA Thermal Tool Hub</title>
     <script>
       let mode = "auto";
       try {
@@ -37,68 +37,58 @@
         ><span>Thermal Tool Hub</span>
       </div>
       <label class="theme"
-        >◐ <span>背景</span>
-        <select id="theme" aria-label="背景模式">
-          <option value="auto">自動</option>
-          <option value="day">白天</option>
-          <option value="dusk">黃昏</option>
-          <option value="night">黑夜</option>
+        >◐ <span>Scene</span>
+        <select id="theme" aria-label="Background mode">
+          <option value="auto">Auto</option>
+          <option value="day">Day</option>
+          <option value="dusk">Dusk</option>
+          <option value="night">Night</option>
         </select></label
       >
     </header>
     <main>
-      <div class="intro">
-        <span class="eyebrow"><i></i> THERMAL ENGINEERING</span>
-        <h1>熱流工具控制台</h1>
-      </div>
       <div class="layout">
-        <section class="wheelPanel" aria-label="工具輪盤">
-          <div class="sectionline">
-            <span>工具輪盤</span><span class="mono" id="total"></span>
-          </div>
+        <section class="wheelPanel" aria-label="Tool wheel">
           <div class="stage" id="stage">
-            <div class="ground"></div>
             <div class="wheel" id="wheel">
-              <div class="leg left"></div>
-              <div class="leg right"></div>
-              <div class="base"></div>
-              <div class="rim"></div>
-              <div id="spokes"></div>
-              <div class="axle"><img src="assets/delta.png" alt="DELTA" /></div>
+              <img class="stand" src="assets/stand.svg" alt="" />
+              <img class="rotor" id="rotor" src="assets/rotor.svg" alt="" />
+              <div class="axle">
+                <span class="delta-mark" role="img" aria-label="Delta"></span>
+              </div>
               <div id="cars"></div>
             </div>
           </div>
           <div class="wheelFoot">
-            <span>拖曳輪盤或使用 ← → 切換</span><span id="groups"></span>
+            <span class="guide">Drag or use ← →</span><span id="groups"></span>
           </div>
         </section>
-        <section class="detail" aria-label="工具預覽">
-          <div class="sectionline">
-            <span>工具預覽</span>
+        <section class="detail" aria-label="Selected tool">
+          <div class="tool-nav">
+            <span id="fig"></span>
             <div class="nav">
-              <button id="prev" aria-label="上一個工具">‹</button
-              ><button id="next" aria-label="下一個工具">›</button>
+              <button id="prev" aria-label="Previous tool">‹</button
+              ><button id="next" aria-label="Next tool">›</button>
             </div>
           </div>
           <div id="preview" aria-live="polite">
             <figure>
               <img id="hero" alt="" />
-              <figcaption id="fig"></figcaption>
             </figure>
             <div class="info">
               <div class="category" id="category"></div>
-              <h2 id="name"></h2>
+              <h1 lang="zh-Hant" id="name"></h1>
               <div id="en"></div>
-              <p id="summary"></p>
+              <p lang="zh-Hant" id="summary"></p>
             </div>
           </div>
           <div class="actions">
             <a id="launch" target="_blank" rel="noopener noreferrer"
-              >開啟工具 ↗</a
+              >Open tool ↗</a
             ><a id="repo" target="_blank" rel="noopener noreferrer"
-              >GitHub 原始碼</a
+              >View source</a
             ><a id="share" target="_blank" rel="noopener noreferrer" hidden
-              >發佈至團隊</a
+              >Publish to team</a
             >
           </div>
         </section>
@@ -106,36 +96,40 @@
     </main>
     <dialog id="dialog">
       <form id="form">
-        <h2>新增工具</h2>
+        <h2>Add tool</h2>
         <p>
           儲存後即可在此瀏覽器使用。有 repo 寫入權限的成員亦可透過 GitHub
-          將工具發佈至團隊。
+          將工具Publish to team。
         </p>
-        <label>工具名稱<input required name="name" maxlength="100" /></label
-        ><label>車廂短名稱（選填）<input name="short" maxlength="16" /></label
+        <label>Tool name<input required name="name" maxlength="100" /></label
         ><label
-          >工具簡介<textarea
+          >English cabin label (optional)<input
+            name="short"
+            maxlength="16" /></label
+        ><label
+          >Description<textarea
             required
             name="summary"
             maxlength="360"
           ></textarea></label
         ><label
-          >工具入口網址<input
+          >Tool URL<input
             required
             name="launchUrl"
             type="url"
             placeholder="https://" /></label
-        ><label>Repo 網址（選填）<input name="repoUrl" type="url" /></label
         ><label
-          >代表圖片（選填）<input
+          >Repository URL (optional)<input name="repoUrl" type="url" /></label
+        ><label
+          >Tool image (optional)<input
             name="image"
             type="file"
             accept="image/png,image/jpeg,image/webp"
         /></label>
         <p id="error" role="alert"></p>
         <footer>
-          <button type="button" id="cancel">取消</button
-          ><button class="primary">儲存工具</button>
+          <button type="button" id="cancel">Cancel</button
+          ><button class="primary">Save tool</button>
         </footer>
       </form>
     </dialog>

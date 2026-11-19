@@ -4,8 +4,8 @@ const storageKey = "delta-thermal-tools-v1";
 const reduce = matchMedia("(prefers-reduced-motion: reduce)");
 const add = {
   id: "+",
-  name: "新增工具",
-  short: "新增工具",
+  name: "Add tool",
+  short: "Add tool",
   category: "工具管理",
   tag: "TOOL LIBRARY",
   summary: "將常用工具加入輪盤，快速開啟下一個工程任務。",
@@ -61,11 +61,11 @@ function safeImage(img, t) {
   img.src = t.image || "assets/delta.png";
 }
 function position(angle) {
+  $("rotor").style.transform = "rotate(" + angle + "rad)";
   [...$("cars").children].forEach((el, i) => {
     const a = (i * 2 * Math.PI) / slots.length + angle;
-    el.style.left = 50 + 34 * Math.sin(a) + "%";
-    el.style.top = 50 - 38 * Math.cos(a) + "%";
-    $("spokes").children[i].style.transform = "rotate(" + a + "rad)";
+    el.style.left = 50 + 38 * Math.sin(a) + "%";
+    el.style.top = 46 - 38 * Math.cos(a) + "%";
   });
 }
 function preview() {
@@ -76,11 +76,11 @@ function preview() {
   $("fig").textContent = isAdd
     ? "TOOL LIBRARY"
     : "TOOL / " + String(group * 7 + current + 1).padStart(2, "0");
-  $("category").textContent = t.category + "  /  " + t.tag;
+  $("category").textContent = t.tag;
   $("name").textContent = t.name;
   $("en").textContent = t.en || "";
   $("summary").textContent = t.summary;
-  $("launch").textContent = isAdd ? "＋ 新增工具" : "開啟工具 ↗";
+  $("launch").textContent = isAdd ? "Add tool" : "Open tool ↗";
   $("launch").setAttribute("aria-disabled", String(blocked));
   if (blocked) $("launch").removeAttribute("href");
   else $("launch").href = isAdd ? "#add" : t.launchUrl;
@@ -102,7 +102,7 @@ function preview() {
     issue.searchParams.set("title", "[Tool Hub] " + t.name);
     issue.searchParams.set(
       "body",
-      "發佈後，工具名稱、簡介和網址將顯示在公開工具輪盤。自訂圖片僅保留於原瀏覽器。\n\n" +
+      "Publishing shares the tool name, description and URL on the public wheel. Custom images stay in this browser.\n\n" +
         JSON.stringify(record),
     );
     $("share").href = issue.href;
@@ -121,18 +121,21 @@ function render(selected = 0) {
   current = target = selected;
   rotation = (-selected * 2 * Math.PI) / slots.length;
   $("cars").replaceChildren();
-  $("spokes").replaceChildren();
+
   slots.forEach((t, i) => {
     const c = document.createElement("button");
     c.className = "car";
-    c.setAttribute("aria-label", t.name);
+    const cabinName = /^[\x20-\x7e]+$/.test(t.short || "")
+      ? t.short
+      : "Tool " + (group * 7 + i + 1);
+    c.setAttribute("aria-label", t.en || cabinName);
     const label = document.createElement("span");
-    label.textContent = t.short || t.name;
+    label.textContent = cabinName;
     if (t === add) {
       c.classList.add("add");
-      const plus = document.createElement("b");
-      plus.textContent = "＋";
-      c.append(plus);
+      const window = document.createElement("i");
+      window.className = "empty-window";
+      c.append(window);
     } else {
       const image = new Image();
       image.alt = "";
@@ -146,17 +149,13 @@ function render(selected = 0) {
       else choose(i);
     };
     $("cars").append(c);
-    const spoke = document.createElement("div");
-    spoke.className = "spoke";
-    $("spokes").append(spoke);
   });
-  $("total").textContent = String(all.length).padStart(2, "0") + " TOOLS";
   $("groups").replaceChildren();
   if (all.length > 7) {
     const pages = Math.ceil(all.length / 7);
     [-1, 1].forEach((d) => {
       const btn = document.createElement("button");
-      btn.textContent = d < 0 ? "上一組" : "下一組";
+      btn.textContent = d < 0 ? "Previous group" : "Next group";
       btn.disabled = group + d < 0 || group + d >= pages;
       btn.onclick = () => {
         group += d;
@@ -278,7 +277,7 @@ function readImage(file) {
   return new Promise((resolve, reject) => {
     const r = new FileReader();
     r.onload = () => resolve(r.result);
-    r.onerror = () => reject(Error("圖片讀取失敗。"));
+    r.onerror = () => reject(Error("The image could not be read."));
     r.readAsDataURL(file);
   });
 }
@@ -296,16 +295,16 @@ $("form").onsubmit = async (e) => {
       summary = get("summary"),
       launchUrl = get("launchUrl"),
       repoUrl = get("repoUrl");
-    if (!name || !summary) throw Error("請填寫工具名稱和簡介。");
+    if (!name || !summary) throw Error("Enter a tool name and description.");
     if (!validUrl(launchUrl) || (repoUrl && !validUrl(repoUrl)))
-      throw Error("網址須以 http 或 https 開頭。");
+      throw Error("Use an HTTP or HTTPS URL.");
     const file = data.get("image");
     if (
       file.size > 1024 * 1024 ||
       (file.size &&
         !["image/png", "image/jpeg", "image/webp"].includes(file.type))
     )
-      throw Error("請選擇 1 MB 以內的 PNG、JPEG 或 WebP 圖片。");
+      throw Error("Choose a PNG, JPEG or WebP image under 1 MB.");
     const t = {
       id: crypto.randomUUID(),
       name,
@@ -328,7 +327,7 @@ $("form").onsubmit = async (e) => {
   } catch (error) {
     $("error").textContent =
       error.name === "QuotaExceededError"
-        ? "儲存空間不足，請縮小圖片後重試。"
+        ? "Storage is full. Try a smaller image."
         : error.message;
   } finally {
     b.disabled = false;
