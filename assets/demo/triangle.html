@@ -2,7 +2,7 @@
 <html lang="en">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Delta · Rotating hub preview</title>
+  <title>Delta · Regular tetrahedron</title>
   <style>
     * {
       box-sizing: border-box;
@@ -28,7 +28,7 @@
       margin: 0 0 1.8rem;
     }
     .disc {
-      width: min(72vw, 52vh, 420px);
+      width: min(82vw, 60svh, 600px);
       aspect-ratio: 1;
       border-radius: 50%;
       margin: auto;
@@ -41,15 +41,15 @@
         8px 6px 34px #0087dc66,
         0 -6px 22px #b9eb5f44;
     }
-    canvas {
+    svg {
       width: 100%;
       height: 100%;
       display: block;
       border-radius: 50%;
-      touch-action: pan-y;
+      touch-action: none;
       cursor: grab;
     }
-    canvas:active {
+    svg:active {
       cursor: grabbing;
     }
     button {
@@ -68,88 +68,99 @@
     }
   </style>
   <main>
-    <h1>Rotating hub preview</h1>
+    <h1>Regular tetrahedron</h1>
     <div class="disc">
-      <canvas
-        width="800"
-        height="800"
-        aria-label="Extruded Delta triangle rotating about its vertical centerline"
-      ></canvas>
+      <svg
+        viewBox="-1.35 -1.35 2.7 2.7"
+        role="img"
+        aria-label="Regular tetrahedron rotating about the axis through its apex and the center of its base"
+      >
+        <defs>
+          <g id="face">
+            <path d="M30 0 0 49H60Z" fill="currentColor" />
+            <path
+              d="M 643 401.042 C 626.705 402.291, 618.154 404.429, 605 410.542 C 597.228 414.153, 590.744 416.397, 585 417.463 C 568.079 420.601, 565.429 421.226, 561.121 423.098 C 558.713 424.145, 553.626 427.312, 549.816 430.136 C 544.480 434.092, 540.508 436.027, 532.512 438.564 C 519.970 442.545, 519.360 442.851, 510.366 449.682 C 506.012 452.988, 499.849 456.428, 494.554 458.507 C 483.946 462.671, 480.700 464.652, 475.327 470.241 C 473.032 472.628, 467.146 476.954, 462.248 479.853 C 457.350 482.753, 450.524 487.583, 447.079 490.587 C 443.634 493.591, 437.500 497.869, 433.447 500.093 C 428.410 502.858, 424.433 506.037, 420.877 510.141 C 418.017 513.444, 413.059 517.923, 409.860 520.095 C 406.212 522.572, 402.537 526.264, 400 530 C 397.429 533.786, 393.786 537.429, 390 540 C 386.214 542.571, 382.571 546.214, 380 550 C 377.429 553.786, 373.786 557.429, 370 560 C 366.221 562.566, 362.571 566.214, 360.013 569.980 C 357.796 573.245, 354.074 577.237, 351.741 578.852 C 345.607 583.098, 343.493 585.697, 340.206 593.033 C 338.536 596.760, 334.640 602.560, 331.138 606.533 C 327.542 610.614, 322.883 617.591, 319.891 623.376 C 316.597 629.744, 313.084 634.895, 310 637.876 C 304.568 643.128, 302.254 647.321, 298.933 657.931 C 297.654 662.018, 295.233 667.318, 293.554 669.710 C 291.874 672.101, 288.793 676.439, 286.707 679.350 C 283.478 683.856, 282.324 687.051, 278.952 700.825 C 276.773 709.725, 273.230 721.635, 271.079 727.291 C 260.595 754.861, 260.338 794.820, 270.514 815.027 C 272.464 818.900, 275.676 827.115, 277.651 833.284 C 282.715 849.100, 285.174 853.886, 290.537 858.369 C 293.083 860.497, 297.129 865.301, 299.529 869.045 C 302.670 873.946, 305.576 876.996, 309.904 879.935 C 313.211 882.180, 317.237 885.926, 318.852 888.259 C 323.611 895.135, 326.241 896.957, 337.151 900.940 C 342.843 903.018, 352 907.010, 357.500 909.812 C 374.623 918.536, 384.360 919.980, 426.144 919.992 C 469.308 920.004, 478.627 918.658, 502.780 908.924 C 509.533 906.202, 520.035 902.622, 526.116 900.969 C 538.210 897.680, 541.191 896.393, 548.131 891.464 C 554.756 886.758, 558.163 885.147, 569.364 881.427 C 578.795 878.294, 583.565 875.570, 593.693 867.533 C 595.999 865.703, 601.907 862.767, 606.824 861.009 C 613.154 858.744, 617.555 856.360, 621.908 852.838 C 630.444 845.932, 632.860 845.710, 643.457 850.865 C 677.689 867.515, 746.944 867.092, 769.875 850.093 C 773.603 847.329, 780.474 843.311, 785.144 841.164 C 791.712 838.143, 794.525 836.180, 797.567 832.492 C 803.632 825.140, 807.099 821.783, 812.239 818.284 C 815.292 816.205, 817.942 813.249, 819.732 809.927 C 821.254 807.100, 824.525 802.080, 827 798.771 C 837.970 784.108, 839.519 780.322, 843.065 759.500 C 849.821 719.833, 843.600 673.177, 829.551 658.158 C 816.026 643.699, 815.608 623.344, 828.019 583.563 C 836.463 556.496, 836.286 531.433, 827.495 509.500 C 825.511 504.550, 822.572 494.473, 820.964 487.108 C 817.450 471.010, 815.486 466.666, 809.440 461.611 C 806.907 459.494, 802.871 454.699, 800.471 450.955 C 797.330 446.054, 794.424 443.004, 790.096 440.065 C 786.789 437.820, 782.729 434.013, 781.073 431.606 C 776.452 424.889, 772.886 422.460, 762.635 419.045 C 757.446 417.316, 750.342 414.107, 746.850 411.914 C 730.842 401.861, 726.112 400.982, 685.500 400.516 C 668.450 400.321, 649.325 400.557, 643 401.042 M 658.500 453.052 C 654.650 453.482, 647.675 454.757, 643 455.886 C 638.325 457.015, 628.425 458.643, 621 459.503 C 603.669 461.512, 601.784 462.056, 588.003 469.036 C 581.676 472.241, 571.775 476.306, 566 478.071 C 551.977 482.357, 545.913 485.124, 540.239 489.830 C 537.632 491.991, 530.550 496.282, 524.500 499.365 C 518.450 502.449, 510.837 507.261, 507.582 510.060 C 504.327 512.859, 497.761 517.109, 492.992 519.504 C 486.178 522.926, 483.199 525.153, 479.090 529.897 C 476.160 533.278, 471.362 537.354, 468.180 539.163 C 465.056 540.939, 460.025 544.704, 457 547.529 C 453.975 550.353, 447.900 555.401, 443.500 558.746 C 433.953 566.004, 404.271 595.827, 397.466 605 C 394.814 608.575, 390.517 613.790, 387.918 616.589 C 385.318 619.388, 381.829 624.377, 380.164 627.676 C 378.073 631.817, 375.001 635.566, 370.239 639.789 C 364.584 644.802, 362.827 647.128, 360.485 652.702 C 357.292 660.305, 354.758 664.614, 350.019 670.500 C 345.256 676.415, 342.426 682.558, 338.889 694.660 C 335.313 706.890, 333.667 710.532, 328.151 718.406 C 313.270 739.649, 314.085 806.193, 329.431 822.907 C 331.750 825.433, 335.534 830.229, 337.839 833.565 C 347.071 846.924, 359.935 855.331, 380.798 861.639 C 411.120 870.808, 420.421 871.809, 440.199 868.034 C 445.865 866.952, 455.256 865.371, 461.069 864.520 C 487.056 860.713, 498.763 857.638, 511.500 851.273 C 518.100 847.974, 528.169 843.833, 533.875 842.070 C 547.772 837.776, 554.276 834.790, 559.846 830.144 C 562.406 828.010, 566.975 825.019, 570 823.497 C 587.366 814.763, 588.857 811.772, 584.468 794.477 C 583.076 788.990, 581.056 779.615, 579.981 773.645 C 578.905 767.675, 576.693 758.336, 575.064 752.891 C 568.425 730.700, 568.584 725.311, 576.942 689.393 C 582.644 664.889, 583.249 663.234, 589.155 655.959 C 591.592 652.956, 595.110 648.250, 596.972 645.500 C 601.557 638.730, 614.225 625.727, 627.290 614.380 C 639.563 603.723, 640.706 603.029, 651 600.005 C 655.125 598.793, 665.367 595.583, 673.761 592.871 C 699.884 584.433, 719.409 583.964, 738.500 591.316 C 770.125 603.497, 777.697 598.856, 780.170 565.776 C 782.606 533.205, 779.222 511.251, 770.032 500 C 768.010 497.525, 764.733 492.575, 762.750 489 C 759.143 482.498, 755.015 478.030, 745.350 470.170 C 730.396 458.007, 688.357 449.722, 658.500 453.052"
+              transform="scale(.05)"
+              fill="white"
+            />
+          </g>
+        </defs>
+      </svg>
     </div>
     <button id="toggle"></button><button id="front">Front view</button>
     <p>Drag to rotate</p>
   </main>
   <script>
-    const canvas = document.querySelector("canvas"),
-      ctx = canvas.getContext("2d"),
-      art = new Image();
-    art.src = "../hub-mark.png";
-    let angle = 0,
-      playing = !matchMedia("(prefers-reduced-motion:reduce)").matches,
-      previous = null,
-      drag = null;
-    const corners = [
-      [0, -1],
-      [-Math.sqrt(3) / 2, 0.5],
-      [Math.sqrt(3) / 2, 0.5],
-    ];
-    const halfDepth = 0.085;
-    function project(x, y, z) {
-      return [
-        400 + 390 * (x * Math.cos(angle) + z * Math.sin(angle)),
-        400 + 390 * y,
-      ];
+    const scene = document.querySelector("svg");
+    const ns = scene.namespaceURI;
+    const height = Math.sqrt(2);
+    const vertices = [[0, (3 * height) / 4, 0]];
+    for (let i = 0; i < 3; i++) {
+      const theta = ((i * 2 - 1) * Math.PI) / 3;
+      vertices.push([Math.sin(theta), -height / 4, Math.cos(theta)]);
     }
-    function polygon(points) {
-      ctx.beginPath();
-      points.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
-      ctx.closePath();
-    }
+    const faces = [
+      [0, 1, 2],
+      [0, 2, 3],
+      [0, 3, 1],
+      [1, 3, 2],
+    ].map((indices) => {
+      const el = document.createElementNS(ns, "use");
+      el.setAttribute("href", "#face");
+      scene.append(el);
+      return { indices, el };
+    });
+    let yaw = 0.38,
+      pitch = 0.19,
+      drag = null,
+      previous = null;
+    let playing = !matchMedia("(prefers-reduced-motion:reduce)").matches;
     function draw() {
-      ctx.clearRect(0, 0, 800, 800);
-      const cosine = Math.cos(angle),
-        sine = Math.sin(angle);
-      for (let i = 0; i < 3; i++) {
-        const [x, y] = corners[i],
-          [u, v] = corners[(i + 1) % 3];
-        if ((v - y) * sine <= 0) continue;
-        polygon([
-          project(x, y, -halfDepth),
-          project(u, v, -halfDepth),
-          project(u, v, halfDepth),
-          project(x, y, halfDepth),
-        ]);
-        const g = ctx.createLinearGradient(0, 0, 0, 800);
-        g.addColorStop(0, "#71c9ee");
-        g.addColorStop(0.44, "#0879ab");
-        g.addColorStop(1, "#034269");
-        ctx.fillStyle = g;
-        ctx.fill();
+      const points = vertices.map(([x, y, z]) => {
+        const depth = z * Math.cos(yaw) - x * Math.sin(yaw);
+        return [
+          x * Math.cos(yaw) + z * Math.sin(yaw),
+          depth * Math.sin(pitch) - y * Math.cos(pitch),
+          y * Math.sin(pitch) + depth * Math.cos(pitch),
+        ];
+      });
+      for (const { indices, el } of faces) {
+        const [tip, left, right] = indices.map((i) => points[i]);
+        const u = left.map((n, i) => n - tip[i]),
+          v = right.map((n, i) => n - tip[i]);
+        const nz = u[1] * v[0] - u[0] * v[1];
+        el.style.display = nz > 1e-8 ? "" : "none";
+        if (nz <= 1e-8) continue;
+        const nx = u[2] * v[1] - u[1] * v[2],
+          ny = u[0] * v[2] - u[2] * v[0];
+        const diffuse = Math.max(
+          0,
+          (-0.42 * nx - 0.6 * ny + 0.68 * nz) / Math.hypot(nx, ny, nz),
+        );
+        el.style.color = "hsl(202 97% " + (25 + 22 * diffuse) + "%)";
+        const a = (right[0] - left[0]) / 60,
+          b = (right[1] - left[1]) / 60;
+        const c = (u[0] + v[0]) / 98,
+          d = (u[1] + v[1]) / 98;
+        el.setAttribute(
+          "transform",
+          "matrix(" +
+            [a, b, c, d, tip[0] - 30 * a, tip[1] - 30 * b].join(" ") +
+            ")",
+        );
       }
-      const side = cosine >= 0 ? 1 : -1,
-        z = side * halfDepth;
-      ctx.save();
-      polygon(corners.map(([x, y]) => project(x, y, z)));
-      ctx.clip();
-      ctx.fillStyle = "#0087dc";
-      ctx.fillRect(0, 0, 800, 800);
-      if (art.complete && art.naturalWidth) {
-        ctx.translate(400 + 390 * z * sine, 400);
-        ctx.scale(Math.abs(cosine) * 390, 390);
-        ctx.drawImage(art, -1, -1, 2, 2);
-      }
-      ctx.restore();
     }
     function sync() {
       document.querySelector("#toggle").textContent = playing
         ? "Pause"
         : "Play";
     }
-    function frame(t) {
-      if (playing && drag === null && previous !== null)
-        angle += (Math.min(t - previous, 80) * 2 * Math.PI) / 8000;
-      previous = t;
-      draw();
+    function frame(now) {
+      if (playing && drag === null && previous !== null) {
+        yaw += (Math.min(now - previous, 80) * 2 * Math.PI) / 10000;
+        draw();
+      }
+      previous = now;
       requestAnimationFrame(frame);
     }
     document.querySelector("#toggle").onclick = () => {
@@ -158,20 +169,30 @@
     };
     document.querySelector("#front").onclick = () => {
       playing = false;
-      angle = 0;
+      yaw = 0;
+      pitch = 0.19;
+      draw();
       sync();
     };
-    canvas.onpointerdown = (e) => {
-      canvas.setPointerCapture(e.pointerId);
-      drag = e.clientX;
+    scene.onpointerdown = (e) => {
+      scene.setPointerCapture(e.pointerId);
+      drag = [e.clientX, e.clientY];
     };
-    canvas.onpointermove = (e) => {
-      if (drag !== null) {
-        angle += ((e.clientX - drag) * 2 * Math.PI) / canvas.clientWidth;
-        drag = e.clientX;
-      }
+    scene.onpointermove = (e) => {
+      if (drag === null) return;
+      yaw += ((e.clientX - drag[0]) * 2 * Math.PI) / scene.clientWidth;
+      pitch = Math.max(
+        -1.48,
+        Math.min(
+          1.48,
+          pitch + ((e.clientY - drag[1]) * Math.PI) / scene.clientHeight,
+        ),
+      );
+      drag = [e.clientX, e.clientY];
+      draw();
     };
-    canvas.onlostpointercapture = () => (drag = null);
+    scene.onlostpointercapture = () => (drag = null);
+    draw();
     sync();
     requestAnimationFrame(frame);
   </script>
