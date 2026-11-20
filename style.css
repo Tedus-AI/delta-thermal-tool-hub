@@ -87,6 +87,11 @@ body:before {
 [data-backdrop="none"] .backdrop {
   display: none;
 }
+[data-backdrop="delta"] {
+  --bd-day: url("assets/backdrops/delta-day.webp");
+  --bd-dusk: url("assets/backdrops/delta-dusk.webp");
+  --bd-night: url("assets/backdrops/delta-night.webp");
+}
 [data-backdrop="city"] {
   --bd-day: url("assets/backdrops/city-day.webp");
   --bd-dusk: url("assets/backdrops/city-dusk.webp");
