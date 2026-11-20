@@ -73,7 +73,7 @@ const defaults = records.map(
     category,
     tag,
     summary,
-    image: "assets/" + (i + 1) + ".webp",
+    image: "assets/tools/" + (i + 1) + ".webp",
     launchUrl: "https://tedus-ai.github.io/" + slug + "/" + path,
     repoUrl: "https://github.com/Tedus-AI/" + slug,
   }),

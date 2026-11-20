@@ -500,8 +500,6 @@ header {
   object-fit: contain;
   pointer-events: none;
   border-radius: 20% 20% 14% 14%;
-  background: linear-gradient(130deg, #e2f0f1, #a0c8d0);
-  border: 0.23cqw solid #638b99;
 }
 .car img {
   padding: 0.2cqw;
@@ -532,6 +530,7 @@ header {
   border-color: #64d7d7;
 }
 .empty-window {
+  border: 0.23cqw solid #638b99;
   background:
     linear-gradient(90deg, transparent 46%, #7094a0 47% 53%, transparent 54%),
     linear-gradient(165deg, #d7e9ed, #a4c1c8 57%, #577f8c 59% 71%, #91aeb5 73%);
