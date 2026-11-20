@@ -41,16 +41,54 @@
               : "day";
       }
       scene();
+      let backdrop = "city";
+      try {
+        backdrop =
+          new URLSearchParams(location.search).get("backdrop") ||
+          localStorage.getItem("backdrop") ||
+          "city";
+      } catch {}
+      document.documentElement.dataset.backdrop = [
+        "city",
+        "harbor",
+        "ridge",
+        "none",
+      ].includes(backdrop)
+        ? backdrop
+        : "city";
     </script>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="sky dusk"></div>
     <div class="sky night"></div>
+    <div class="backdrop" aria-hidden="true">
+      <i class="day"></i><i class="dusk"></i><i class="night"></i>
+    </div>
     <header>
       <div class="brand">
         <span class="brandlogo"><img src="assets/delta.png" alt="DELTA" /></span
         ><span>Thermal Tool Hub</span>
+      </div>
+      <div class="header-tools">
+      <div class="backdrop-picker" role="radiogroup" aria-label="Backdrop">
+        <label title="City riverside"
+          ><input type="radio" name="backdrop" value="city" /><span
+            >城市</span
+          ></label
+        ><label title="Harbour pier"
+          ><input type="radio" name="backdrop" value="harbor" /><span
+            >海港</span
+          ></label
+        ><label title="Ridge with 5G towers"
+          ><input type="radio" name="backdrop" value="ridge" /><span
+            >山稜</span
+          ></label
+        ><label title="Plain gradient"
+          ><input type="radio" name="backdrop" value="none" /><span
+            >無</span
+          ></label
+        >
       </div>
       <div
         class="scene-picker"
@@ -106,6 +144,7 @@
             ><span>Night</span></label
           >
         </div>
+      </div>
       </div>
     </header>
     <main>
