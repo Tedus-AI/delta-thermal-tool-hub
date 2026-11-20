@@ -57,6 +57,29 @@
       ].includes(backdrop)
         ? backdrop
         : "city";
+      // Backdrop defocus. 100% matches the original baked blur (26 px sigma on
+      // the 1600 px source); the images are pre-blurred by 6 px, so CSS adds
+      // the remainder, scaled to how large the image is drawn.
+      let blurPct = 95;
+      try {
+        const saved = parseFloat(localStorage.getItem("backdropBlur"));
+        if (saved >= 0 && saved <= 200) blurPct = saved;
+      } catch {}
+      function applyBlur(pct) {
+        blurPct = pct;
+        const scale = Math.max(
+          (innerWidth + 300) / 1600,
+          (innerHeight + 300) / 1000,
+        );
+        const sigma = (26 * pct) / 100;
+        const px = Math.sqrt(Math.max(0, sigma * sigma - 36)) * scale;
+        document.documentElement.style.setProperty(
+          "--blur-px",
+          px.toFixed(1) + "px",
+        );
+      }
+      applyBlur(blurPct);
+      addEventListener("resize", () => applyBlur(blurPct));
     </script>
     <link rel="stylesheet" href="style.css" />
   </head>
@@ -64,7 +87,12 @@
     <div class="sky dusk"></div>
     <div class="sky night"></div>
     <div class="backdrop" aria-hidden="true">
-      <i class="day"></i><i class="dusk"></i><i class="night"></i>
+      <div class="bd-photo">
+        <i class="day"></i><i class="dusk"></i><i class="night"></i>
+      </div>
+      <div class="bd-lights">
+        <i class="day"></i><i class="dusk"></i><i class="night"></i>
+      </div>
     </div>
     <header>
       <div class="brand">
@@ -72,7 +100,26 @@
         ><span>Thermal Tool Hub</span>
       </div>
       <div class="header-tools">
-      <div class="backdrop-picker" role="radiogroup" aria-label="Backdrop">
+      <button
+        class="settings-btn"
+        id="settings-btn"
+        type="button"
+        aria-label="背景設定"
+        title="背景設定"
+        aria-expanded="false"
+        aria-controls="settings"
+      >
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"
+          />
+        </svg>
+      </button>
+      <div class="settings-panel" id="settings" lang="zh-Hant" hidden>
+        <div>
+          <h2 id="bd-title">背景場景</h2>
+          <div class="backdrop-picker" role="radiogroup" aria-labelledby="bd-title">
         <label title="Delta campus"
           ><input type="radio" name="backdrop" value="delta" /><span
             >台達</span
@@ -94,6 +141,23 @@
             >無</span
           ></label
         >
+      </div>
+        </div>
+        <div>
+          <div class="blur-row">
+            <h2><label for="blur">霧化程度</label></h2>
+            <output id="blur-value" for="blur">95%</output>
+          </div>
+          <div class="blur-control" id="blur-control">
+            <span>清晰</span
+            ><input id="blur" type="range" min="0" max="200" step="1" value="95" /><span
+              >霧化</span
+            >
+          </div>
+        </div>
+        <button type="button" class="blur-reset" id="blur-reset">
+          恢復預設
+        </button>
       </div>
       <div
         class="scene-picker"

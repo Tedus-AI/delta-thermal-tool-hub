@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw, ImageFilter
 
 W, H = 1600, 1000
 OUT, LOGO = sys.argv[1], sys.argv[2]
-BLUR = 26 * 0.95
+BASE_BLUR = 6  # image px; the rest of the defocus is applied live in CSS
 
 TIMES = {
     "day": dict(
@@ -209,7 +209,7 @@ for name, t in TIMES.items():
     pd = ImageDraw.Draw(plate)
     for (x, y, c, a) in lights:
         pd.ellipse([x - 2, y - 2, x + 2, y + 2], fill=tuple(int(v * 255) for v in hexc(c)))
-    blurred = to_arr(plate.filter(ImageFilter.GaussianBlur(BLUR)))
+    blurred = to_arr(plate.filter(ImageFilter.GaussianBlur(BASE_BLUR)))
     bok = np.zeros_like(blurred)
     # Dusk and night carry no bokeh discs: window and lamp light only survives as the
     # soft glow left in the blurred plate. Day keeps its few faint foreground discs.
@@ -226,12 +226,12 @@ for name, t in TIMES.items():
               hexc(rng.choice(["#ffffff", "#dce9ff", "#fff3d9"])), a * 0.55)
     bok = 1 - np.exp(-bok * 1.4)
     bok = to_arr(to_img(bok).filter(ImageFilter.GaussianBlur(2.0)))
-    img = 1 - (1 - blurred) * (1 - bok)
+    img = blurred
     yy, xx = np.mgrid[0:H, 0:W]
     hz = np.exp(-((yy / H - 0.78) / 0.2) ** 2)[..., None] * t["haze_amt"]
     img = img * (1 - hz) + hexc(t["haze"]) * hz
     img = img * (1 - 0.26 * (np.hypot((xx / W - 0.5) * 1.2, yy / H - 0.48) ** 2))[..., None]
     img = img * np.array(t["grade"]) + rng.normal(0, 0.012, (H, W, 1))
-    to_img(img).save(f"{OUT}/delta-{name}.webp", quality=74, method=6)
-    to_img(sharp).resize((800, 500)).save(f"{OUT}/delta-{name}-sharp.png")
+    to_img(img).save(f"{OUT}/delta-{name}.webp", quality=80, method=6)
+    to_img(bok).save(f"{OUT}/delta-{name}-lights.webp", quality=80, method=6)
     print(name)

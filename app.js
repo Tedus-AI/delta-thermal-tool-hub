@@ -538,13 +538,57 @@ async function loadSharedTools() {
 }
 loadSharedTools();
 
-// Backdrop location picker (city / harbor / ridge / none).
+// Background settings: location picker and live defocus slider.
+const settingsBtn = $("settings-btn");
+const settings = $("settings");
+const blur = $("blur");
+const blurValue = $("blur-value");
+const blurControl = $("blur-control");
+const BLUR_DEFAULT = 95;
+
+function openSettings(open) {
+  settings.hidden = !open;
+  settingsBtn.setAttribute("aria-expanded", open);
+}
+settingsBtn.addEventListener("click", () => openSettings(settings.hidden));
+document.addEventListener("pointerdown", (e) => {
+  if (!settings.hidden && !settings.contains(e.target) && !settingsBtn.contains(e.target))
+    openSettings(false);
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !settings.hidden) {
+    openSettings(false);
+    settingsBtn.focus();
+  }
+});
+
+function syncBlurControl() {
+  const off = document.documentElement.dataset.backdrop === "none";
+  blur.disabled = off;
+  blurControl.classList.toggle("disabled", off);
+}
 for (const input of document.querySelectorAll('input[name="backdrop"]')) {
   input.checked = input.value === document.documentElement.dataset.backdrop;
   input.addEventListener("change", () => {
     document.documentElement.dataset.backdrop = input.value;
+    syncBlurControl();
     try {
       localStorage.setItem("backdrop", input.value);
     } catch {}
   });
 }
+syncBlurControl();
+
+function setBlur(pct, persist) {
+  blur.value = pct;
+  blurValue.textContent = pct + "%";
+  applyBlur(pct);
+  if (persist) {
+    try {
+      localStorage.setItem("backdropBlur", pct);
+    } catch {}
+  }
+}
+setBlur(blurPct, false);
+blur.addEventListener("input", () => setBlur(+blur.value, true));
+$("blur-reset").addEventListener("click", () => setBlur(BLUR_DEFAULT, true));
