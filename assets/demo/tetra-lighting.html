@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Delta Mark Lighting</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100svh;
+        background: radial-gradient(ellipse at 50% 35%, #284b60, #0b1c2c 70%);
+        color: #eaf8ff;
+        font:
+          15px/1.5 Inter,
+          "Noto Sans TC",
+          Arial,
+          sans-serif;
+        display: grid;
+        place-items: center;
+      }
+      main {
+        width: min(100% - 32px, 1180px);
+        padding: 28px 0;
+        text-align: center;
+      }
+      h1 {
+        font-size: clamp(20px, 3vw, 28px);
+        margin: 0 0 4px;
+      }
+      .sub {
+        color: #bcd3df;
+        margin: 0 0 26px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 26px;
+      }
+      figure {
+        margin: 0;
+      }
+      .axle {
+        position: relative;
+        width: min(100%, 250px);
+        margin: auto;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: radial-gradient(at 36% 25%, white 25%, #e4f3fa 75%, #adccd7);
+        border: 3px double #6f9cae;
+        box-shadow:
+          0 0 0 4px #6494a5,
+          0 0 0 6px #c8f4f5,
+          0 0 22px #64d7d78c;
+        overflow: hidden;
+      }
+      .axle canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+      figcaption {
+        margin-top: 14px;
+      }
+      figcaption b {
+        display: block;
+        font-size: 17px;
+      }
+      figcaption span {
+        color: #9fbccb;
+        font-size: 13px;
+      }
+      .controls {
+        margin-top: 26px;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      button {
+        padding: 0.5rem 1rem;
+        background: #294a5d;
+        color: white;
+        border: 1px solid #7095a7;
+        border-radius: 8px;
+        font: inherit;
+        cursor: pointer;
+      }
+      button:focus-visible {
+        outline: 2px solid #b9eb5f;
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>中心三角形 · 白色標誌燈效</h1>
+      <p class="sub">
+        以台達藍、青、萊姆綠加白色，替標誌白色區域做動態背光（類似電競鍵盤燈效模式）
+      </p>
+      <div class="grid">
+        <figure>
+          <div class="axle"><canvas data-mode="static"></canvas></div>
+          <figcaption><b>原色</b><span>白色，不打燈（對照）</span></figcaption>
+        </figure>
+        <figure>
+          <div class="axle"><canvas data-mode="wave"></canvas></div>
+          <figcaption
+            ><b>A · 流光 Wave</b
+            ><span>四色沿著環慢慢流動，圓點同步漸變</span></figcaption
+          >
+        </figure>
+        <figure>
+          <div class="axle"><canvas data-mode="breathe"></canvas></div>
+          <figcaption
+            ><b>B · 呼吸 Breathing</b
+            ><span>每次呼吸換一個顏色，亮暗起伏</span></figcaption
+          >
+        </figure>
+        <figure>
+          <div class="axle"><canvas data-mode="comet"></canvas></div>
+          <figcaption
+            ><b>C · 追光 Comet + 漣漪</b
+            ><span>白色光頭繞環追跑拖出三色尾巴，圓點向外擴散漣漪</span></figcaption
+          >
+        </figure>
+      </div>
+      <div class="controls">
+        <button id="toggle" type="button">暫停</button
+        ><button id="front" type="button">正面</button>
+      </div>
+    </main>
+    <script src="../tetra.js"></script>
+    <script>
+      const ctrls = [];
+      let playing = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+      Promise.all(
+        [...document.querySelectorAll("canvas")].map((c) =>
+          DeltaTetra.mount(c, {
+            mode: c.dataset.mode,
+            radius: 0.01,
+            period: 20,
+            yaw: 0.35,
+            distance: 2.75,
+            playing,
+          }),
+        ),
+      ).then((list) => {
+        ctrls.push(...list);
+        window.__ctrls = ctrls;
+      });
+      const toggle = document.getElementById("toggle");
+      const sync = () => (toggle.textContent = playing ? "暫停" : "播放");
+      toggle.onclick = () => {
+        playing = !playing;
+        ctrls.forEach((c) => (c.state.playing = playing));
+        sync();
+      };
+      document.getElementById("front").onclick = () =>
+        ctrls.forEach((c) => c.setYaw(0));
+      sync();
+    </script>
+  </body>
+</html>

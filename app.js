@@ -591,4 +591,72 @@ function setBlur(pct, persist) {
 }
 setBlur(blurPct, false);
 blur.addEventListener("input", () => setBlur(+blur.value, true));
-$("blur-reset").addEventListener("click", () => setBlur(BLUR_DEFAULT, true));
+// 3D centre mark: rounded tetrahedron with optional RGB lighting on the mark.
+const TETRA_DEFAULTS = { radius: 0.01, period: 120, mode: "static" };
+const tetraOpts = { ...TETRA_DEFAULTS };
+try {
+  const saved = JSON.parse(localStorage.getItem("tetra") || "{}");
+  if (saved.radius >= 0 && saved.radius <= 0.05) tetraOpts.radius = saved.radius;
+  if (saved.period >= 10 && saved.period <= 240) tetraOpts.period = saved.period;
+  if (["static", "wave", "breathe"].includes(saved.mode)) tetraOpts.mode = saved.mode;
+} catch {}
+let tetra = null;
+const tetraR = $("tetra-r");
+const tetraPeriod = $("tetra-period");
+const lightInputs = [...document.querySelectorAll('input[name="tetraLight"]')];
+
+function saveTetra() {
+  try {
+    localStorage.setItem("tetra", JSON.stringify(tetraOpts));
+  } catch {}
+}
+function syncTetraControls() {
+  tetraR.value = tetraOpts.radius;
+  $("tetra-r-out").textContent = tetraOpts.radius.toFixed(3);
+  tetraPeriod.value = tetraOpts.period;
+  $("tetra-period-out").textContent = tetraOpts.period + " 秒";
+  lightInputs.forEach((i) => (i.checked = i.value === tetraOpts.mode));
+}
+syncTetraControls();
+tetraR.addEventListener("input", () => {
+  tetraOpts.radius = +tetraR.value;
+  syncTetraControls();
+  tetra?.setRadius(tetraOpts.radius);
+  saveTetra();
+});
+tetraPeriod.addEventListener("input", () => {
+  tetraOpts.period = +tetraPeriod.value;
+  syncTetraControls();
+  tetra?.setPeriod(tetraOpts.period);
+  saveTetra();
+});
+lightInputs.forEach((input) =>
+  input.addEventListener("change", () => {
+    tetraOpts.mode = input.value;
+    tetra?.setMode(tetraOpts.mode);
+    saveTetra();
+  }),
+);
+if (window.DeltaTetra) {
+  DeltaTetra.mount($("tetra"), {
+    ...tetraOpts,
+    distance: 2.75,
+    playing: !reduce.matches,
+  })
+    .then((ctrl) => {
+      tetra = ctrl;
+      $("tetra").parentElement.classList.add("is-3d");
+      reduce.addEventListener?.("change", () => (ctrl.state.playing = !reduce.matches));
+    })
+    .catch(() => {}); // no WebGL / offline: keep the flat logo
+}
+
+$("blur-reset").addEventListener("click", () => {
+  setBlur(BLUR_DEFAULT, true);
+  Object.assign(tetraOpts, TETRA_DEFAULTS);
+  syncTetraControls();
+  tetra?.setRadius(tetraOpts.radius);
+  tetra?.setPeriod(tetraOpts.period);
+  tetra?.setMode(tetraOpts.mode);
+  saveTetra();
+});

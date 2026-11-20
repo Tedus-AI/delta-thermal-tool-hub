@@ -336,5 +336,7 @@ for name, fn in SCENES.items():
         bok = to_arr(to_img(np.clip(bok, 0, 1)).filter(ImageFilter.GaussianBlur(2.2)))
         base = finish(blurred, t, rng)
         to_img(base).save(f"{OUT}/{name}-{tname}.webp", quality=80, method=6)
+        # tiny, naturally soft copy shown under the CSS-blurred photo so its edges never fade
+        to_img(base).resize((64, 40), Image.LANCZOS).filter(ImageFilter.GaussianBlur(1.2)).save(f"{OUT}/{name}-{tname}-tiny.webp", quality=85)
         to_img(bok).save(f"{OUT}/{name}-{tname}-lights.webp", quality=80, method=6)
         print(name, tname)

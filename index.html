@@ -84,6 +84,9 @@
     <div class="sky dusk"></div>
     <div class="sky night"></div>
     <div class="backdrop" aria-hidden="true">
+      <div class="bd-under">
+        <i class="day"></i><i class="dusk"></i><i class="night"></i>
+      </div>
       <div class="bd-photo">
         <i class="day"></i><i class="dusk"></i><i class="night"></i>
       </div>
@@ -149,6 +152,29 @@
             <span>清晰</span
             ><input id="blur" type="range" min="0" max="200" step="1" value="95" /><span
               >霧化</span
+            >
+          </div>
+        </div>
+        <div class="settings-group">
+          <h2>中心三角形</h2>
+          <div class="blur-row">
+            <label for="tetra-r">圓角 R（邊長 = 1）</label>
+            <output id="tetra-r-out" for="tetra-r">0.010</output>
+          </div>
+          <input id="tetra-r" type="range" min="0" max="0.05" step="0.001" value="0.01" />
+          <div class="blur-row">
+            <label for="tetra-period">旋轉一圈</label>
+            <output id="tetra-period-out" for="tetra-period">120 秒</output>
+          </div>
+          <input id="tetra-period" type="range" min="10" max="240" step="5" value="120" />
+          <div class="blur-row"><span id="light-title">標誌燈效</span></div>
+          <div class="backdrop-picker light-picker" role="radiogroup" aria-labelledby="light-title">
+            <label title="White, no lighting"
+              ><input type="radio" name="tetraLight" value="static" /><span>原色</span></label
+            ><label title="Wave"
+              ><input type="radio" name="tetraLight" value="wave" /><span>流光</span></label
+            ><label title="Breathing"
+              ><input type="radio" name="tetraLight" value="breathe" /><span>呼吸</span></label
             >
           </div>
         </div>
@@ -227,6 +253,7 @@
                     src="assets/hub-mark.png"
                     alt="Delta"
                   />
+                  <canvas class="tetra" id="tetra" aria-hidden="true"></canvas>
                 </div>
               </div>
               <div id="cars"></div>
@@ -303,6 +330,7 @@
         </footer>
       </form>
     </dialog>
+    <script src="assets/tetra.js"></script>
     <script src="catalog.js"></script>
     <script src="app.js"></script>
   </body>
