@@ -9,6 +9,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
 W, H = 1600, 1000
+BASE_BLUR = 6  # image px; the rest of the defocus is applied live in CSS
 OUT = sys.argv[1]
 
 TIMES = {
@@ -314,7 +315,7 @@ SCENES = {"city": scene_city, "harbor": scene_harbor, "ridge": scene_ridge}
 
 for name, fn in SCENES.items():
     for tname, t in TIMES.items():
-        rng = np.random.default_rng(hash(name) % 1000 + 7)
+        rng = np.random.default_rng(sum(map(ord, name)) % 1000 + 7)
         random.seed(1)
         sharp, lights = fn(t, rng)
         # defocus: large blur (~f/1.4 portrait lens on a far background)
@@ -325,13 +326,15 @@ for name, fn in SCENES.items():
             col = tuple(int(v * 255) for v in hexc(pal[int(x * 7 + y) % len(pal)] if c in (None, "star") else c))
             r = 1 if c == "star" else 2
             pd.ellipse([x - r, y - r, x + r, y + r], fill=col)
-        blurred = to_arr(plate.filter(ImageFilter.GaussianBlur(26)))
-        # only some point lights survive as distinct defocused discs
+        # The page applies the variable defocus with a CSS blur, so the plate is only
+        # lightly pre-blurred here (BASE_BLUR); the bokeh discs go to a separate layer
+        # that is screen-blended on top and stays crisp at any blur setting.
+        blurred = to_arr(plate.filter(ImageFilter.GaussianBlur(BASE_BLUR)))
         sel = [l for l in lights if l[2] != "star" and (l[2] is not None or rng.random() < 0.10)]
         bok = add_bokeh(np.zeros_like(blurred), sel, t, rng, 1.0)
         bok = 1 - np.exp(-bok * 1.4)
         bok = to_arr(to_img(np.clip(bok, 0, 1)).filter(ImageFilter.GaussianBlur(2.2)))
-        img = 1 - (1 - blurred) * (1 - bok)  # screen blend
-        img = finish(img, t, rng)
-        to_img(img).resize((1600, 1000), Image.LANCZOS).save(f"{OUT}/{name}-{tname}.webp", quality=72, method=6)
+        base = finish(blurred, t, rng)
+        to_img(base).save(f"{OUT}/{name}-{tname}.webp", quality=80, method=6)
+        to_img(bok).save(f"{OUT}/{name}-{tname}-lights.webp", quality=80, method=6)
         print(name, tname)

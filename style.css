@@ -54,30 +54,56 @@ body:before {
   opacity: 1;
 }
 /* Photographic backdrop: a real-looking location, defocused like a
-   shallow-depth-of-field portrait so the wheel and card stay the subject. */
+   shallow-depth-of-field portrait so the wheel and card stay the subject.
+   The photo is only lightly pre-blurred; --blur-px (set from the settings
+   slider) adds the rest live. Point lights / stars sit on a separate layer
+   that is screen-blended on top and is not blurred. */
+:root {
+  --blur-px: 22px;
+}
 .backdrop {
   position: fixed;
   inset: 0;
   z-index: -2;
   pointer-events: none;
   overflow: hidden;
+  isolation: isolate;
+}
+.bd-photo,
+.bd-lights {
+  position: absolute;
+  inset: 0;
+}
+.bd-photo {
+  filter: blur(var(--blur-px));
+}
+.bd-lights {
+  mix-blend-mode: screen;
 }
 .backdrop i {
   position: absolute;
-  inset: -2%;
+  inset: -150px;
   background: center / cover no-repeat;
   opacity: 0;
   transition: opacity 1.2s;
-  transform: scale(1.04);
 }
-.backdrop .day {
+.bd-photo .day {
   background-image: var(--bd-day);
 }
-.backdrop .dusk {
+.bd-photo .dusk {
   background-image: var(--bd-dusk);
 }
-.backdrop .night {
+.bd-photo .night {
   background-image: var(--bd-night);
+}
+.bd-lights .day {
+  background-image: var(--bd-day-l);
+}
+.bd-lights .dusk {
+  background-image: var(--bd-dusk-l);
+}
+.bd-lights .night {
+  background-image: var(--bd-night-l);
 }
 [data-scene="day"] .backdrop .day,
 [data-scene="dusk"] .backdrop .dusk,
@@ -89,23 +115,35 @@ body:before {
 }
 [data-backdrop="delta"] {
   --bd-day: url("assets/backdrops/delta-day.webp");
+  --bd-day-l: url("assets/backdrops/delta-day-lights.webp");
   --bd-dusk: url("assets/backdrops/delta-dusk.webp");
+  --bd-dusk-l: url("assets/backdrops/delta-dusk-lights.webp");
   --bd-night: url("assets/backdrops/delta-night.webp");
+  --bd-night-l: url("assets/backdrops/delta-night-lights.webp");
 }
 [data-backdrop="city"] {
   --bd-day: url("assets/backdrops/city-day.webp");
+  --bd-day-l: url("assets/backdrops/city-day-lights.webp");
   --bd-dusk: url("assets/backdrops/city-dusk.webp");
+  --bd-dusk-l: url("assets/backdrops/city-dusk-lights.webp");
   --bd-night: url("assets/backdrops/city-night.webp");
+  --bd-night-l: url("assets/backdrops/city-night-lights.webp");
 }
 [data-backdrop="harbor"] {
   --bd-day: url("assets/backdrops/harbor-day.webp");
+  --bd-day-l: url("assets/backdrops/harbor-day-lights.webp");
   --bd-dusk: url("assets/backdrops/harbor-dusk.webp");
+  --bd-dusk-l: url("assets/backdrops/harbor-dusk-lights.webp");
   --bd-night: url("assets/backdrops/harbor-night.webp");
+  --bd-night-l: url("assets/backdrops/harbor-night-lights.webp");
 }
 [data-backdrop="ridge"] {
   --bd-day: url("assets/backdrops/ridge-day.webp");
+  --bd-day-l: url("assets/backdrops/ridge-day-lights.webp");
   --bd-dusk: url("assets/backdrops/ridge-dusk.webp");
+  --bd-dusk-l: url("assets/backdrops/ridge-dusk-lights.webp");
   --bd-night: url("assets/backdrops/ridge-night.webp");
+  --bd-night-l: url("assets/backdrops/ridge-night-lights.webp");
 }
 /* Subject separation: a soft veil behind the wheel and the card, like the
    light falloff around a portrait subject. */
@@ -139,21 +177,72 @@ body:before {
   --veil-core: #07121fa6;
 }
 .header-tools {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
 }
+.settings-btn {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  background: linear-gradient(165deg, #8caebe33, #688aa522);
+  backdrop-filter: blur(12px);
+  color: var(--muted);
+}
+.settings-btn:hover,
+.settings-btn[aria-expanded="true"] {
+  color: var(--ink);
+}
+.settings-btn svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.4s;
+}
+.settings-btn[aria-expanded="true"] svg {
+  transform: rotate(60deg);
+}
+.settings-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 20;
+  width: min(330px, calc(100vw - 32px));
+  padding: 14px 16px 16px;
+  border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  backdrop-filter: blur(18px) saturate(1.2);
+  box-shadow: 0 12px 32px #0c223a33;
+  display: grid;
+  gap: 14px;
+}
+.settings-panel h2 {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
 .backdrop-picker {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   padding: 3px;
   border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
   border-radius: 999px;
   background: linear-gradient(165deg, #8caebe33, #688aa522);
-  backdrop-filter: blur(12px);
 }
 .backdrop-picker label {
   position: relative;
-  padding: 0 11px;
   min-height: 32px;
   display: grid;
   place-items: center;
@@ -186,11 +275,44 @@ body:before {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
-@media (max-width: 600px) {
-  .backdrop-picker label {
-    padding: 0 7px;
-    min-height: 34px;
-  }
+.blur-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.blur-row output {
+  font: 600 13px/1 "IBM Plex Mono", monospace;
+  color: var(--ink);
+}
+.blur-control {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+#blur {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  accent-color: var(--blue);
+  cursor: pointer;
+}
+.blur-reset {
+  justify-self: end;
+  padding: 3px 10px;
+  font-size: 12px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+}
+.blur-reset:hover {
+  color: var(--ink);
+}
+.blur-control.disabled {
+  opacity: 0.45;
 }
 [data-scene="night"] {
   --ink: #edf6ff;
