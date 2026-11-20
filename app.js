@@ -537,3 +537,14 @@ async function loadSharedTools() {
   } catch {}
 }
 loadSharedTools();
+
+// Backdrop location picker (city / harbor / ridge / none).
+for (const input of document.querySelectorAll('input[name="backdrop"]')) {
+  input.checked = input.value === document.documentElement.dataset.backdrop;
+  input.addEventListener("change", () => {
+    document.documentElement.dataset.backdrop = input.value;
+    try {
+      localStorage.setItem("backdrop", input.value);
+    } catch {}
+  });
+}

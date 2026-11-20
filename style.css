@@ -53,6 +53,140 @@ body:before {
 [data-scene="night"] .night {
   opacity: 1;
 }
+/* Photographic backdrop: a real-looking location, defocused like a
+   shallow-depth-of-field portrait so the wheel and card stay the subject. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  overflow: hidden;
+}
+.backdrop i {
+  position: absolute;
+  inset: -2%;
+  background: center / cover no-repeat;
+  opacity: 0;
+  transition: opacity 1.2s;
+  transform: scale(1.04);
+}
+.backdrop .day {
+  background-image: var(--bd-day);
+}
+.backdrop .dusk {
+  background-image: var(--bd-dusk);
+}
+.backdrop .night {
+  background-image: var(--bd-night);
+}
+[data-scene="day"] .backdrop .day,
+[data-scene="dusk"] .backdrop .dusk,
+[data-scene="night"] .backdrop .night {
+  opacity: 1;
+}
+[data-backdrop="none"] .backdrop {
+  display: none;
+}
+[data-backdrop="city"] {
+  --bd-day: url("assets/backdrops/city-day.webp");
+  --bd-dusk: url("assets/backdrops/city-dusk.webp");
+  --bd-night: url("assets/backdrops/city-night.webp");
+}
+[data-backdrop="harbor"] {
+  --bd-day: url("assets/backdrops/harbor-day.webp");
+  --bd-dusk: url("assets/backdrops/harbor-dusk.webp");
+  --bd-night: url("assets/backdrops/harbor-night.webp");
+}
+[data-backdrop="ridge"] {
+  --bd-day: url("assets/backdrops/ridge-day.webp");
+  --bd-dusk: url("assets/backdrops/ridge-dusk.webp");
+  --bd-night: url("assets/backdrops/ridge-night.webp");
+}
+/* Subject separation: a soft veil behind the wheel and the card, like the
+   light falloff around a portrait subject. */
+.backdrop:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 42% 58% at 30% 54%,
+      var(--veil-core),
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 40% 62% at 76% 54%,
+      var(--veil-core),
+      transparent 74%
+    ),
+    var(--veil);
+}
+:root {
+  --veil: #f4fbff38;
+  --veil-core: #f6fcffa8;
+}
+[data-scene="dusk"] {
+  --veil: #fff3ea2e;
+  --veil-core: #fff5eea0;
+}
+[data-scene="night"] {
+  --veil: #06101c33;
+  --veil-core: #07121fa6;
+}
+.header-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.backdrop-picker {
+  display: flex;
+  padding: 3px;
+  border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  border-radius: 999px;
+  background: linear-gradient(165deg, #8caebe33, #688aa522);
+  backdrop-filter: blur(12px);
+}
+.backdrop-picker label {
+  position: relative;
+  padding: 0 11px;
+  min-height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 560;
+  color: var(--muted);
+  cursor: pointer;
+}
+.backdrop-picker input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+}
+.backdrop-picker label:has(:checked) {
+  color: var(--ink);
+  font-weight: 720;
+  background: #ffffff70;
+  box-shadow:
+    inset 0 1px 2px white,
+    0 1px 4px #12344930;
+}
+[data-scene="night"] .backdrop-picker label:has(:checked) {
+  background: #93c9d840;
+  box-shadow: inset 0 1px 1px #d6ffff60;
+}
+.backdrop-picker label:has(:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+@media (max-width: 600px) {
+  .backdrop-picker label {
+    padding: 0 7px;
+    min-height: 34px;
+  }
+}
 [data-scene="night"] {
   --ink: #edf6ff;
   --muted: #bad0dc;
