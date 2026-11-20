@@ -215,7 +215,7 @@ function step() {
   }
   requestAnimationFrame(frame);
 }
-const revolutionMs = 180000;
+const revolutionMs = 120000;
 let hoveredCar = null;
 let previousFrame = null;
 function cruise(now) {
