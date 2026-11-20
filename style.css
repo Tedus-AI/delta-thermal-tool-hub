@@ -969,6 +969,26 @@ h1 {
   text-decoration: none;
   font-weight: 650;
 }
+/* Primary call to action: pill with a Delta blue -> teal gradient and a soft glow */
+#launch {
+  border-radius: 999px;
+  padding: 12px 26px;
+  background: linear-gradient(100deg, #0069b6, #0087dc 55%, #19a7b8);
+  box-shadow:
+    0 8px 22px #0087dc55,
+    inset 0 1px 0 #ffffff40;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s,
+    filter 0.2s;
+}
+#launch:hover {
+  filter: brightness(1.06);
+  box-shadow:
+    0 10px 28px #0087dc77,
+    inset 0 1px 0 #ffffff55;
+  transform: translateY(-1px);
+}
 #launch[aria-disabled="true"] {
   opacity: 0.5;
   pointer-events: none;
