@@ -115,6 +115,7 @@ function preview() {
   });
 }
 function render(selected = 0) {
+  hoveredCar = null;
   epoch++;
   busy = false;
   slots = [...all.slice(group * 7, group * 7 + 7), add];
@@ -143,6 +144,12 @@ function render(selected = 0) {
       c.append(image);
     }
     c.append(label);
+    c.onpointerenter = (e) => {
+      if (e.pointerType !== "touch") hoveredCar = c;
+    };
+    c.onpointerleave = () => {
+      if (hoveredCar === c) hoveredCar = null;
+    };
     c.onclick = () => {
       if (suppressClick) return;
       if (t === add) openForm();
@@ -172,15 +179,19 @@ function choose(i) {
   if (!busy) step();
 }
 function step() {
-  if (target === current) {
+  const n = slots.length,
+    spacing = (2 * Math.PI) / n;
+  const aligned = Math.round(-rotation / spacing);
+  const distance = mod(target - aligned, n);
+  const next = aligned + (distance === 0 ? 0 : distance <= n / 2 ? 1 : -1);
+  const destination = -next * spacing;
+  if (Math.abs(destination - rotation) < 1e-9 && target === current) {
     busy = false;
     preview();
     return;
   }
-  const n = slots.length,
-    d = mod(target - current, n) <= n / 2 ? 1 : -1,
-    offset = rotation,
-    change = (-d * 2 * Math.PI) / n,
+  const offset = rotation,
+    change = destination - offset,
     key = epoch;
   busy = true;
   preview();
@@ -194,7 +205,8 @@ function step() {
       requestAnimationFrame(frame);
       return;
     }
-    current = mod(current + d, n);
+    rotation = destination;
+    current = mod(next, n);
     if (!reduce.matches)
       $("preview").animate([{ opacity: 0.55 }, { opacity: 1 }], {
         duration: 210,
@@ -203,6 +215,39 @@ function step() {
   }
   requestAnimationFrame(frame);
 }
+const revolutionMs = 180000;
+let hoveredCar = null;
+let previousFrame = null;
+function cruise(now) {
+  const elapsed =
+    previousFrame === null ? 0 : Math.min(now - previousFrame, 100);
+  previousFrame = now;
+  if (
+    !busy &&
+    !hoveredCar &&
+    !document.hidden &&
+    !$("dialog").open &&
+    !reduce.matches
+  ) {
+    const turn = 2 * Math.PI;
+    rotation = -mod(-rotation + (turn * elapsed) / revolutionMs, turn);
+    position(rotation);
+    // Keep the last arrival selected until the next cabin crosses twelve o'clock.
+    const arrived = mod(
+      Math.floor((-rotation * slots.length) / turn + 1e-10),
+      slots.length,
+    );
+    if (arrived !== current) {
+      current = target = arrived;
+      preview();
+    }
+  }
+  requestAnimationFrame(cruise);
+}
+document.addEventListener("visibilitychange", () => {
+  previousFrame = null;
+});
+requestAnimationFrame(cruise);
 $("prev").onclick = () => choose(target - 1);
 $("next").onclick = () => choose(target + 1);
 let startX = null,

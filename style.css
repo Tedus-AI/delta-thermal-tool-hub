@@ -507,13 +507,15 @@ header {
   padding: 0.2cqw;
 }
 .car span {
-  height: 27%;
+  height: 28%;
   display: grid;
   place-items: center;
   font:
-    bold clamp(8px, 1.85cqw, 18px) / 1 Arial,
+    bold clamp(6px, 1.65cqw, 18px) / 1 Arial,
     sans-serif;
-  white-space: nowrap;
+  white-space: normal;
+  text-align: center;
+  line-height: 1;
   max-width: 92%;
   overflow: hidden;
 }

@@ -1,7 +1,7 @@
 const records = [
   [
     "5G RRU 體積快速評估",
-    "RRU Volume",
+    "Thermal Sizing",
     "5G RRU Quick Volume Evaluation Tool",
     "體積評估",
     "VOLUME ESTIMATION",
@@ -10,7 +10,7 @@ const records = [
   ],
   [
     "導熱墊片與凸台尺寸評估",
-    "Pad & Stud",
+    "Component Management",
     "AI Thermal Pad and Stud Size Evaluation Tool",
     "尺寸評估",
     "PAD & STUD SIZING",
@@ -28,7 +28,7 @@ const records = [
   ],
   [
     "專案 TIM 材料管理",
-    "Project TIM",
+    "TIM Management",
     "Project TIM Management Tool",
     "材料管理",
     "MATERIAL MANAGEMENT",
@@ -36,18 +36,8 @@ const records = [
     "Project-TIM-management-tool",
   ],
   [
-    "RRU 熱阻網路視覺化",
-    "Thermal Net",
-    "RRU Thermal Network Visualizer",
-    "熱路分析",
-    "THERMAL NETWORK",
-    "開啟 FR1 RRU 專案的熱傳路徑，檢視熱源、節點與元件之間的熱阻關係。",
-    "RRU-Thermal-Network-Visualizer",
-    "project/FR1_RRU_starkcore/thermal-path",
-  ],
-  [
     "PA 焊接銅箔自動繪圖",
-    "PA Copper",
+    "Solder Drawings",
     "PA Solder Copper Auto Draw",
     "圖面生成",
     "COPPER LAYOUT",
@@ -56,12 +46,22 @@ const records = [
   ],
   [
     "TIM 點膠模擬器",
-    "Dispensing",
+    "TIM Dispensing",
     "TIM Dispensing Simulator",
     "製程模擬",
     "DISPENSE SIMULATION",
     "模擬導熱介面材料的點膠配置，觀察膠材分布並比較設計方案。",
     "TIM-Dispensing-Simulator",
+  ],
+  [
+    "RRU 熱阻網路視覺化",
+    "Thermal Network",
+    "RRU Thermal Network Visualizer",
+    "熱路分析",
+    "THERMAL NETWORK",
+    "開啟 FR1 RRU 專案的熱傳路徑，檢視熱源、節點與元件之間的熱阻關係。",
+    "RRU-Thermal-Network-Visualizer",
+    "project/FR1_RRU_starkcore/thermal-path",
   ],
 ];
 const defaults = records.map(
