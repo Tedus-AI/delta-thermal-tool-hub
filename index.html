@@ -60,7 +60,7 @@
       // Backdrop defocus. 100% matches the original baked blur (26 px sigma on
       // the 1600 px source); the images are pre-blurred by 6 px, so CSS adds
       // the remainder, scaled to how large the image is drawn.
-      let blurPct = 95;
+      let blurPct = 0;
       try {
         const saved = parseFloat(localStorage.getItem("backdropBlur"));
         if (saved >= 0 && saved <= 200) blurPct = saved;
@@ -146,11 +146,11 @@
         <div>
           <div class="blur-row">
             <h2><label for="blur">霧化程度</label></h2>
-            <output id="blur-value" for="blur">95%</output>
+            <output id="blur-value" for="blur">0%</output>
           </div>
           <div class="blur-control" id="blur-control">
             <span>清晰</span
-            ><input id="blur" type="range" min="0" max="200" step="1" value="95" /><span
+            ><input id="blur" type="range" min="0" max="200" step="1" value="0" /><span
               >霧化</span
             >
           </div>
@@ -159,14 +159,14 @@
           <h2>中心三角形</h2>
           <div class="blur-row">
             <label for="tetra-r">圓角 R（邊長 = 1）</label>
-            <output id="tetra-r-out" for="tetra-r">0.010</output>
+            <output id="tetra-r-out" for="tetra-r">0.005</output>
           </div>
-          <input id="tetra-r" type="range" min="0" max="0.05" step="0.001" value="0.01" />
+          <input id="tetra-r" type="range" min="0" max="0.05" step="0.001" value="0.005" />
           <div class="blur-row">
             <label for="tetra-period">旋轉一圈</label>
-            <output id="tetra-period-out" for="tetra-period">120 秒</output>
+            <output id="tetra-period-out" for="tetra-period">50 秒</output>
           </div>
-          <input id="tetra-period" type="range" min="10" max="240" step="5" value="120" />
+          <input id="tetra-period" type="range" min="10" max="240" step="5" value="50" />
           <div class="blur-row"><span id="light-title">標誌燈效</span></div>
           <div class="backdrop-picker light-picker" role="radiogroup" aria-labelledby="light-title">
             <label title="White, no lighting"

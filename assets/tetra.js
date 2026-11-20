@@ -225,9 +225,9 @@
   async function mount(canvas, opts = {}) {
     const THREE = await loadThree();
     const state = {
-      radius: opts.radius ?? 0.01,
-      period: opts.period ?? 120,
-      mode: opts.mode ?? "static",
+      radius: opts.radius ?? 0.005,
+      period: opts.period ?? 50,
+      mode: opts.mode ?? "wave",
       pitch: opts.pitch ?? 0,
       yaw: opts.yaw ?? 0,
       playing: opts.playing ?? true,

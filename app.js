@@ -544,7 +544,7 @@ const settings = $("settings");
 const blur = $("blur");
 const blurValue = $("blur-value");
 const blurControl = $("blur-control");
-const BLUR_DEFAULT = 95;
+const BLUR_DEFAULT = 0;
 
 function openSettings(open) {
   settings.hidden = !open;
@@ -592,7 +592,7 @@ function setBlur(pct, persist) {
 setBlur(blurPct, false);
 blur.addEventListener("input", () => setBlur(+blur.value, true));
 // 3D centre mark: rounded tetrahedron with optional RGB lighting on the mark.
-const TETRA_DEFAULTS = { radius: 0.01, period: 120, mode: "static" };
+const TETRA_DEFAULTS = { radius: 0.005, period: 50, mode: "wave" };
 const tetraOpts = { ...TETRA_DEFAULTS };
 try {
   const saved = JSON.parse(localStorage.getItem("tetra") || "{}");
