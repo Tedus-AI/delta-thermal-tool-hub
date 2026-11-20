@@ -69,6 +69,7 @@ body:before {
   overflow: hidden;
   isolation: isolate;
 }
+.bd-under,
 .bd-photo,
 .bd-lights {
   position: absolute;
@@ -82,13 +83,23 @@ body:before {
 }
 .backdrop i {
   position: absolute;
-  /* Bleed only as far as the blur needs (so edges don't fade), instead of a
-     fixed margin that zoomed the photo in. Crop mostly from the bottom so
-     rooflines and the sky stay in frame on wide screens. */
-  inset: calc(var(--blur-px) * -2.5);
+  /* Fixed geometry: the blur amount never changes the photo's size. The
+     blurred photo fades at the viewport edges, where the tiny soft copy in
+     .bd-under shows through. Crop mostly from the bottom so rooflines and
+     the sky stay in frame on wide screens. */
+  inset: 0;
   background: 50% 22% / cover no-repeat;
   opacity: 0;
   transition: opacity 1.2s;
+}
+.bd-under .day {
+  background-image: var(--bd-day-t);
+}
+.bd-under .dusk {
+  background-image: var(--bd-dusk-t);
+}
+.bd-under .night {
+  background-image: var(--bd-night-t);
 }
 .bd-photo .day {
   background-image: var(--bd-day);
@@ -119,34 +130,46 @@ body:before {
 [data-backdrop="delta"] {
   --bd-day: url("assets/backdrops/delta-day.webp");
   --bd-day-l: url("assets/backdrops/delta-day-lights.webp");
+  --bd-day-t: url("assets/backdrops/delta-day-tiny.webp");
   --bd-dusk: url("assets/backdrops/delta-dusk.webp");
   --bd-dusk-l: url("assets/backdrops/delta-dusk-lights.webp");
+  --bd-dusk-t: url("assets/backdrops/delta-dusk-tiny.webp");
   --bd-night: url("assets/backdrops/delta-night.webp");
   --bd-night-l: url("assets/backdrops/delta-night-lights.webp");
+  --bd-night-t: url("assets/backdrops/delta-night-tiny.webp");
 }
 [data-backdrop="city"] {
   --bd-day: url("assets/backdrops/city-day.webp");
   --bd-day-l: url("assets/backdrops/city-day-lights.webp");
+  --bd-day-t: url("assets/backdrops/city-day-tiny.webp");
   --bd-dusk: url("assets/backdrops/city-dusk.webp");
   --bd-dusk-l: url("assets/backdrops/city-dusk-lights.webp");
+  --bd-dusk-t: url("assets/backdrops/city-dusk-tiny.webp");
   --bd-night: url("assets/backdrops/city-night.webp");
   --bd-night-l: url("assets/backdrops/city-night-lights.webp");
+  --bd-night-t: url("assets/backdrops/city-night-tiny.webp");
 }
 [data-backdrop="harbor"] {
   --bd-day: url("assets/backdrops/harbor-day.webp");
   --bd-day-l: url("assets/backdrops/harbor-day-lights.webp");
+  --bd-day-t: url("assets/backdrops/harbor-day-tiny.webp");
   --bd-dusk: url("assets/backdrops/harbor-dusk.webp");
   --bd-dusk-l: url("assets/backdrops/harbor-dusk-lights.webp");
+  --bd-dusk-t: url("assets/backdrops/harbor-dusk-tiny.webp");
   --bd-night: url("assets/backdrops/harbor-night.webp");
   --bd-night-l: url("assets/backdrops/harbor-night-lights.webp");
+  --bd-night-t: url("assets/backdrops/harbor-night-tiny.webp");
 }
 [data-backdrop="ridge"] {
   --bd-day: url("assets/backdrops/ridge-day.webp");
   --bd-day-l: url("assets/backdrops/ridge-day-lights.webp");
+  --bd-day-t: url("assets/backdrops/ridge-day-tiny.webp");
   --bd-dusk: url("assets/backdrops/ridge-dusk.webp");
   --bd-dusk-l: url("assets/backdrops/ridge-dusk-lights.webp");
+  --bd-dusk-t: url("assets/backdrops/ridge-dusk-tiny.webp");
   --bd-night: url("assets/backdrops/ridge-night.webp");
   --bd-night-l: url("assets/backdrops/ridge-night-lights.webp");
+  --bd-night-t: url("assets/backdrops/ridge-night-tiny.webp");
 }
 /* Subject separation: a soft veil behind the wheel and the card, like the
    light falloff around a portrait subject. */
@@ -295,7 +318,7 @@ body:before {
   font-size: 12px;
   color: var(--muted);
 }
-#blur {
+.settings-panel input[type="range"] {
   width: 100%;
   padding: 0;
   border: 0;
@@ -313,6 +336,42 @@ body:before {
 }
 .blur-reset:hover {
   color: var(--ink);
+}
+.settings-group {
+  display: grid;
+  gap: 6px;
+  padding-top: 12px;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+}
+.settings-group .blur-row {
+  font-size: 13px;
+  color: var(--muted);
+}
+.settings-group .blur-row + input {
+  margin-bottom: 4px;
+}
+.light-picker {
+  grid-template-columns: repeat(3, 1fr);
+}
+.settings-panel {
+  max-height: calc(100svh - 90px);
+  overflow-y: auto;
+}
+/* 3D centre mark: the canvas replaces the flat logo once WebGL is ready. */
+.axle-face canvas.tetra {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.axle-face.is-3d canvas.tetra {
+  opacity: 1;
+}
+.axle-face.is-3d .delta-mark {
+  visibility: hidden;
 }
 .blur-control.disabled {
   opacity: 0.45;

@@ -250,5 +250,7 @@ for name, t in TIMES.items():
     img = img * (1 - 0.26 * (np.hypot((xx / W - 0.5) * 1.2, yy / H - 0.48) ** 2))[..., None]
     img = img * np.array(t["grade"]) + rng.normal(0, 0.012, (H, W, 1))
     to_img(img).save(f"{OUT}/delta-{name}.webp", quality=80, method=6)
+    # tiny, naturally soft copy shown under the CSS-blurred photo so its edges never fade
+    to_img(img).resize((64, 40), Image.LANCZOS).filter(ImageFilter.GaussianBlur(1.2)).save(f"{OUT}/delta-{name}-tiny.webp", quality=85)
     to_img(bok).save(f"{OUT}/delta-{name}-lights.webp", quality=80, method=6)
     print(name)
