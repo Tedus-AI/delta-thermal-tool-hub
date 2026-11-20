@@ -211,13 +211,12 @@ for name, t in TIMES.items():
         pd.ellipse([x - 2, y - 2, x + 2, y + 2], fill=tuple(int(v * 255) for v in hexc(c)))
     blurred = to_arr(plate.filter(ImageFilter.GaussianBlur(BLUR)))
     bok = np.zeros_like(blurred)
-    for (x, y, c, a) in lights:
-        if c != t["win"] or rng.random() < 0.12:
-            s = int(rng.uniform(16, 34) * (1.8 if y > H * 0.82 else 1))
-            stamp(bok, x, y, s, hexc(c), a * t["bokeh_alpha"] * 0.55)
-    for _ in range(6 if t["lit"] else 3):  # a few large foreground discs
-        stamp(bok, rng.uniform(0, W), rng.uniform(H * 0.15, H), int(rng.uniform(80, 170)),
-              hexc(rng.choice(t["bokeh"])), t["bokeh_alpha"] * 0.10)
+    # Dusk and night carry no bokeh discs: window and lamp light only survives as the
+    # soft glow left in the blurred plate. Day keeps its few faint foreground discs.
+    if name == "day":
+        for _ in range(3):
+            stamp(bok, rng.uniform(0, W), rng.uniform(H * 0.15, H), int(rng.uniform(80, 170)),
+                  hexc(rng.choice(t["bokeh"])), t["bokeh_alpha"] * 0.10)
     # stars: a gentle starfield that still reads through the defocus (small soft discs)
     skyref = vgrad(t["sky"], H, W)
     for (x, y, a) in stars:
