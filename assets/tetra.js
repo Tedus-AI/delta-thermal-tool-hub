@@ -240,13 +240,22 @@
     const fill = new THREE.DirectionalLight(0xcfefff, 0.5);
     fill.position.set(3, -1, 2);
     scene.add(key, fill, new THREE.HemisphereLight(0xffffff, 0xbfdcea, 0.9));
-    const camera = new THREE.PerspectiveCamera(24, 1, 0.1, 20);
-    camera.position.set(0, 0, opts.distance ?? 3.05);
+    // Narrow lens from further away: near-orthographic, so the spin about the
+    // vertical apex axis reads straight (a close camera exaggerates the
+    // perspective and makes it look like it wobbles). The camera distance is
+    // chosen so the shape's circumcircle fills `fit` of the frame height.
+    const FOV = opts.fov ?? 16;
+    const CIRCUM = 0.561; // circumradius of the front-on silhouette (edge 1)
+    const fit = opts.fit ?? 0.8;
+    const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 40);
+    camera.position.set(0, 0, CIRCUM / fit / Math.tan((FOV * Math.PI) / 360));
     const tilt = new THREE.Group(),
       spin = new THREE.Group();
     tilt.add(spin);
     scene.add(tilt);
-    spin.position.y = -0.2; // centre the apex-to-base span in the frame
+    // put the silhouette's circumcentre (0.561 below the apex) on the view axis,
+    // so the triangle sits in a round frame the way the flat logo did
+    spin.position.y = -0.051;
     const uniforms = { uTime: { value: 0 }, uMode: { value: MODES[state.mode] || 0 } };
     const mats = makeMaterials(THREE, uniforms);
     let meshes = [];

@@ -370,7 +370,9 @@ body:before {
 .axle-face.is-3d canvas.tetra {
   opacity: 1;
 }
-.axle-face.is-3d .delta-mark {
+.axle-face.is-3d .delta-mark,
+.axle-face.is-3d::before {
+  /* no triangle backlight behind the 3D mark; the ring glow (.axle) stays */
   visibility: hidden;
 }
 .blur-control.disabled {
