@@ -640,7 +640,7 @@ lightInputs.forEach((input) =>
 if (window.DeltaTetra) {
   DeltaTetra.mount($("tetra"), {
     ...tetraOpts,
-    fit: 0.8,
+    fit: 1,
     playing: !reduce.matches,
   })
     .then((ctrl) => {

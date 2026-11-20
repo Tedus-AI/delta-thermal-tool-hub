@@ -242,20 +242,30 @@
     scene.add(key, fill, new THREE.HemisphereLight(0xffffff, 0xbfdcea, 0.9));
     // Narrow lens from further away: near-orthographic, so the spin about the
     // vertical apex axis reads straight (a close camera exaggerates the
-    // perspective and makes it look like it wobbles). The camera distance is
-    // chosen so the shape's circumcircle fills `fit` of the frame height.
+    // perspective and makes it look like it wobbles).
     const FOV = opts.fov ?? 16;
-    const CIRCUM = 0.561; // circumradius of the front-on silhouette (edge 1)
-    const fit = opts.fit ?? 0.8;
+    const fit = opts.fit ?? 1;
     const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 40);
-    camera.position.set(0, 0, CIRCUM / fit / Math.tan((FOV * Math.PI) / 360));
     const tilt = new THREE.Group(),
       spin = new THREE.Group();
     tilt.add(spin);
     scene.add(tilt);
-    // put the silhouette's circumcentre (0.561 below the apex) on the view axis,
-    // so the triangle sits in a round frame the way the flat logo did
-    spin.position.y = -0.051;
+    // Frame the front view exactly: with fit = 1 the three (rounded) corners of
+    // the front face touch the edge of the round frame. Solved with perspective:
+    // apex (0, ya, 0) and base corners (±k/2, yb, zb) must all project onto a
+    // circle of radius tan(fov/2)*fit centred on the view axis.
+    function frameFront() {
+      const H = Math.sqrt(2 / 3);
+      const k = (0.75 * H - 2 * state.radius) / (0.75 * H); // corner recession
+      const ya = 0.75 * H * k,
+        yb = -0.25 * H * k,
+        zb = (0.5 / Math.sqrt(3)) * k,
+        t = Math.tan((FOV * Math.PI) / 360) * fit;
+      const m = ya - t * zb;
+      const c = (m * m - 0.25 * k * k - yb * yb) / (2 * (yb - m));
+      spin.position.y = c;
+      camera.position.set(0, 0, (ya + c) / t);
+    }
     const uniforms = { uTime: { value: 0 }, uMode: { value: MODES[state.mode] || 0 } };
     const mats = makeMaterials(THREE, uniforms);
     let meshes = [];
@@ -266,6 +276,7 @@
       meshes.forEach((m) => spin.add(m));
     }
     rebuild();
+    frameFront();
     function resize() {
       const w = canvas.clientWidth || 1,
         h = canvas.clientHeight || 1;
@@ -296,6 +307,7 @@
       setRadius(r) {
         state.radius = r;
         rebuild();
+        frameFront();
       },
       setPeriod(s) {
         state.period = s;
