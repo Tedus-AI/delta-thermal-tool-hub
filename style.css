@@ -82,8 +82,11 @@ body:before {
 }
 .backdrop i {
   position: absolute;
-  inset: -150px;
-  background: center / cover no-repeat;
+  /* Bleed only as far as the blur needs (so edges don't fade), instead of a
+     fixed margin that zoomed the photo in. Crop mostly from the bottom so
+     rooflines and the sky stay in frame on wide screens. */
+  inset: calc(var(--blur-px) * -2.5);
+  background: 50% 22% / cover no-repeat;
   opacity: 0;
   transition: opacity 1.2s;
 }

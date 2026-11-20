@@ -130,12 +130,14 @@ def render(t, rng):
     fill(img, (20, H * 0.38, 450, H * 0.41), t["frame"])
 
     # main tower: glass with vertical sun-shading fins and a crown carrying the mark
-    tx0, tx1, ty0 = 620, 1060, int(H * 0.10)
+    tx0, tx1, ty0 = 620, 1060, int(H * 0.17)
     glass(t, img, (tx0, ty0, tx1, ground_y), rng, lights, 12, 26, refl=0.5)
     for k in range(13):
         x = tx0 + k * (tx1 - tx0) / 12
         fill(img, (x - 5, ty0, x + 5, ground_y), t["fin"])
-    fill(img, (tx0 - 18, ty0 - 80, tx1 + 18, ty0), t["frame"])   # crown
+    CROWN = 118
+    fill(img, (tx0 - 18, ty0 - CROWN, tx1 + 18, ty0), t["frame"])   # crown (solid parapet)
+    fill(img, (tx0 - 18, ty0 - CROWN, tx1 + 18, ty0 - CROWN + 6), t["fin"])  # coping
     fill(img, (tx0 - 30, ty0 - 8, tx1 + 30, ty0 + 6), t["fin"])   # roof blade
     # roof garden on the crown edge (green building)
     d0 = ImageDraw.Draw(plate_holder := to_img(img))
@@ -157,21 +159,36 @@ def render(t, rng):
         tree(d, x + rng.uniform(-20, 20), ground_y + rng.uniform(40, 90), rng.uniform(55, 85),
              t["tree"] if rng.random() < 0.6 else t["tree2"])
     for x in np.arange(tx0 - 10, tx1 + 10, 40):
-        d.ellipse([x - 22, ty0 - 104, x + 22, ty0 - 78], fill=t["tree2"])
-    # mark on the crown
+        d.ellipse([x - 22, ty0 - CROWN - 22, x + 22, ty0 - CROWN + 4], fill=t["tree2"])
+    # Mark mounted on the crown like real building signage: sized to sit inside
+    # the parapet with margins, a contact shadow by day, backlit (blue lit up,
+    # white mark kept) with a soft halo at night.
     logo = Image.open(LOGO).convert("RGBA")
-    lw = int((tx1 - tx0) * 0.86)
-    logo = logo.resize((lw, int(lw * logo.height / logo.width)), Image.LANCZOS)
-    lx, ly = (tx0 + tx1 - lw) // 2, ty0 - 66
-    if t["logo_glow"]:
-        lit = Image.new("RGBA", logo.size, (150, 220, 255, 0))
-        lit.putalpha(logo.getchannel("A"))
-        lit = Image.blend(logo, lit, t["logo_glow"])
-        plate.alpha_composite(lit, (lx, ly)) if plate.mode == "RGBA" else plate.paste(lit, (lx, ly), lit)
-    else:
-        plate.paste(logo, (lx, ly), logo)
-    if True:
-        lights.append((tx0 + (tx1 - tx0) / 2, ly + 20, "#8fd6ff", max(0.35, t["logo_glow"])))
+    lw = int((tx1 - tx0) * 0.68)
+    lh = int(lw * logo.height / logo.width)
+    logo = logo.resize((lw, lh), Image.LANCZOS)
+    lx, ly = (tx0 + tx1 - lw) // 2, ty0 - CROWN // 2 - lh // 2 + 3
+    alpha = logo.getchannel("A")
+    sign = t["logo_glow"]
+    if sign < 0.5:  # daylight / dusk: letters stand slightly proud of the panel
+        sh = Image.new("RGBA", logo.size, (0, 0, 0, 0))
+        sh.putalpha(alpha.point(lambda v: int(v * 0.32)))
+        sh = sh.filter(ImageFilter.GaussianBlur(2.5))
+        plate.paste(sh, (lx + 3, ly + 4), sh)
+    if sign:
+        arr = np.asarray(logo).astype(np.float32)
+        rgb = arr[..., :3] / 255
+        lit_rgb = np.clip(rgb * (1 + 0.9 * sign) + np.array([0.10, 0.22, 0.30]) * sign, 0, 1)
+        logo = Image.fromarray(np.dstack([lit_rgb * 255, arr[..., 3:]]).astype(np.uint8), "RGBA")
+        halo = Image.new("RGBA", (lw + 80, lh + 80), (0, 0, 0, 0))
+        hm = Image.new("L", halo.size, 0)
+        hm.paste(alpha, (40, 40))
+        hm = hm.filter(ImageFilter.GaussianBlur(14)).point(lambda v: int(min(255, v * 1.6 * sign)))
+        halo = Image.new("RGBA", halo.size, (90, 190, 255, 255))
+        halo.putalpha(hm)
+        plate.paste(halo, (lx - 40, ly - 40), halo)
+    plate.paste(logo, (lx, ly), logo)
+    lights.append((tx0 + (tx1 - tx0) / 2, ly + lh / 2, "#8fd6ff", max(0.35, sign)))
     # plaza lamps
     if t["lit"]:
         for x in np.arange(30, W, 120):

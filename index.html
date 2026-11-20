@@ -67,10 +67,7 @@
       } catch {}
       function applyBlur(pct) {
         blurPct = pct;
-        const scale = Math.max(
-          (innerWidth + 300) / 1600,
-          (innerHeight + 300) / 1000,
-        );
+        const scale = Math.max(innerWidth / 1600, innerHeight / 1000);
         const sigma = (26 * pct) / 100;
         const px = Math.sqrt(Math.max(0, sigma * sigma - 36)) * scale;
         document.documentElement.style.setProperty(
