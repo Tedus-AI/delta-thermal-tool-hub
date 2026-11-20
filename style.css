@@ -500,6 +500,9 @@ header {
   object-fit: contain;
   pointer-events: none;
   border-radius: 20% 20% 14% 14%;
+  border: 0.23cqw solid #638b99;
+  background: linear-gradient(135deg, #e4f5f6d9, #c5e4e9b0);
+  box-shadow: inset 0 1px 2px #ffffffb0;
 }
 .car img {
   padding: 0.2cqw;
@@ -528,12 +531,6 @@ header {
 }
 .car:hover:after {
   border-color: #64d7d7;
-}
-.empty-window {
-  border: 0.23cqw solid #638b99;
-  background:
-    linear-gradient(90deg, transparent 46%, #7094a0 47% 53%, transparent 54%),
-    linear-gradient(165deg, #d7e9ed, #a4c1c8 57%, #577f8c 59% 71%, #91aeb5 73%);
 }
 .car.add span {
   color: #dae9ee;

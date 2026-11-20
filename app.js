@@ -72,7 +72,9 @@ function preview() {
   const t = slots[current],
     isAdd = t.id === "+",
     blocked = busy || target !== current;
-  safeImage($("hero"), t);
+  const hero = $("hero");
+  hero.closest("figure").hidden = isAdd;
+  if (!isAdd) safeImage(hero, t);
   $("fig").textContent = isAdd
     ? "TOOL LIBRARY"
     : "TOOL / " + String(group * 7 + current + 1).padStart(2, "0");
@@ -107,8 +109,6 @@ function preview() {
     );
     $("share").href = issue.href;
   }
-  $("repo").hidden = blocked || !validUrl(t.repoUrl);
-  if (!$("repo").hidden) $("repo").href = t.repoUrl;
   [...$("cars").children].forEach((c, i) => {
     c.classList.toggle("active", i === current);
     c.setAttribute("aria-pressed", String(i === current));
