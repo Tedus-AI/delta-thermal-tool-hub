@@ -9,12 +9,12 @@ const records = [
     "5G-RRU-Quick-Volume-Evaluation-Tool",
   ],
   [
-    "導熱墊片與凸台尺寸評估",
+    "散熱與元件規格管理工具",
     "Component Management",
-    "AI Thermal Pad and Stud Size Evaluation Tool",
+    "Thermal & Component Spec Management Tool",
     "尺寸評估",
     "PAD & STUD SIZING",
-    "估算導熱墊片與凸台的配合尺寸，檢視設計間隙與壓縮需求。",
+    "系統化管理專案重要元件資訊，各 function 共同維護、集中管理，資料不散落。",
     "AI-Thermal-pad-and-stud-size-Evaluation-Tool",
   ],
   [
