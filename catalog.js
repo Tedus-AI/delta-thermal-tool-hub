@@ -36,12 +36,12 @@ const records = [
     "Project-TIM-management-tool",
   ],
   [
-    "PA 焊接銅箔自動繪圖",
+    "PA 焊接製程自動出圖器",
     "Solder Drawings",
-    "PA Solder Copper Auto Draw",
+    "PA Soldering Process Auto Drawing Generator",
     "圖面生成",
     "COPPER LAYOUT",
-    "依 PA 焊接區的幾何參數建立銅箔圖形，協助確認佈局。",
+    "依 PA 的大小自動化產生銅塊、錫片及 solder mask 圖面。",
     "pa-solder-copper-auto-draw",
   ],
   [
@@ -50,7 +50,7 @@ const records = [
     "TIM Dispensing Simulator",
     "製程模擬",
     "DISPENSE SIMULATION",
-    "模擬導熱介面材料的點膠配置，觀察膠材分布並比較設計方案。",
+    "模擬導熱介面材料的點膠配置，利用最佳化找出最佳適配的膠量及最低夾氣的設計方案。",
     "TIM-Dispensing-Simulator",
   ],
   [
@@ -59,7 +59,7 @@ const records = [
     "RRU Thermal Network Visualizer",
     "熱路分析",
     "THERMAL NETWORK",
-    "開啟 FR1 RRU 專案的熱傳路徑，檢視熱源、節點與元件之間的熱阻關係。",
+    "視覺化專案的熱傳路徑，並檢視熱源、節點與元件之間的熱阻關係，找出關鍵瓶頸。",
     "RRU-Thermal-Network-Visualizer",
     "project/FR1_RRU_starkcore/thermal-path",
   ],
